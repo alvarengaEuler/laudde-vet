@@ -275,7 +275,7 @@ export default function LaudosPage() {
               reports.map((item, index) => (
                 <div
                   key={index}
-                  className={`border border-gray-200 rounded-lg p-3 dark:border-gray-700 ${handleRowClick ? "cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800" : ""}`}
+                  className="border border-gray-200 rounded-lg p-3 dark:border-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
                   onClick={() => handleRowClick && handleRowClick(item)}
                 >
                   <div className="flex justify-between items-start">
