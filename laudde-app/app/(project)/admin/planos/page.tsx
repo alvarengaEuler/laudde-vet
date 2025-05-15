@@ -86,7 +86,7 @@ const planFormSchema = z.object({
   maxClinics: z.coerce.number().int().min(-1, {
     message: "Use -1 para ilimitado ou um número positivo.",
   }),
-  includesSupport: z.boolean().default(false),
+  includesSupport: z.boolean().optional().default(false),
 })
 
 type PlanFormValues = z.infer<typeof planFormSchema>
