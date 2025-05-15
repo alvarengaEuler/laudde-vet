@@ -3,7 +3,6 @@
 import { useRef } from "react"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
 import { ArrowLeft, ArrowRight, Plus, Clock, User, Building2, X, Check, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -113,10 +112,10 @@ const formatTime = (date: Date) => {
   return date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
 }
 
-// Função para obter o nome do dia da semana
-const getDayName = (date: Date) => {
-  return date.toLocaleDateString("pt-BR", { weekday: "long" })
-}
+// // Função para obter o nome do dia da semana
+// const getDayName = (date: Date) => {
+//   return date.toLocaleDateString("pt-BR", { weekday: "long" })
+// }
 
 // Função para verificar se duas datas são do mesmo dia
 const isSameDay = (date1: Date, date2: Date) => {
@@ -310,7 +309,7 @@ const AppointmentForm = ({
     },
   )
 
-  const handleChange = (field: keyof AppointmentEvent, value: any) => {
+  const handleChange = (field: keyof AppointmentEvent, value: string | Date | undefined) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -433,7 +432,7 @@ const AppointmentForm = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-          <Select value={formData.type} onValueChange={(value: any) => handleChange("type", value)}>
+          <Select value={formData.type} onValueChange={(value: AppointmentEvent["type"]) => handleChange("type", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
@@ -449,7 +448,7 @@ const AppointmentForm = ({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <Select value={formData.status} onValueChange={(value: any) => handleChange("status", value)}>
+          <Select value={formData.status} onValueChange={(value: AppointmentEvent["status"]) => handleChange("status", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o status" />
             </SelectTrigger>
@@ -494,7 +493,6 @@ const AppointmentForm = ({
 }
 
 export default function AgendaPage() {
-  const router = useRouter()
   const [currentDate, setCurrentDate] = useState(new Date())
   const [viewMode, setViewMode] = useState<"day" | "week" | "month">("day")
   const [appointments, setAppointments] = useState<AppointmentEvent[]>(mockAppointments)
