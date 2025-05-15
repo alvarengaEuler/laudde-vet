@@ -349,63 +349,6 @@ const UserCard = ({ user }: { user: AdminUser }) => {
   )
 }
 
-// Componente de card para visualização móvel de planos
-const PlanCard = ({ plan }: { plan: (typeof userPlans)[0] }) => {
-  const userCount = adminUsers.filter((user) => user.planId === plan.id).length
-
-  return (
-    <Card className="mb-4">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base">{plan.name}</CardTitle>
-          <Badge
-            variant="outline"
-            className={
-              plan.type === "basic"
-                ? "border-gray-500 text-gray-500"
-                : plan.type === "standard"
-                  ? "border-blue-500 text-blue-500"
-                  : plan.type === "premium"
-                    ? "border-purple-500 text-purple-500"
-                    : "border-green-500 text-green-500"
-            }
-          >
-            {plan.type === "basic" && "Básico"}
-            {plan.type === "standard" && "Padrão"}
-            {plan.type === "premium" && "Premium"}
-            {plan.type === "enterprise" && "Empresarial"}
-          </Badge>
-        </div>
-        <CardDescription>
-          R$ {plan.price.toFixed(2)} / {plan.billingCycle === "monthly" ? "mês" : "ano"}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="pb-2">
-        <div className="grid gap-2 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-muted-foreground">Usuários:</span>
-            <span>{userCount}</span>
-          </div>
-          <div className="mt-2">
-            <span className="text-muted-foreground">Recursos:</span>
-            <div className="flex flex-wrap gap-1 mt-1">
-              {plan.features.map((feature, index) => (
-                <Badge key={index} variant="secondary" className="font-normal">
-                  {feature}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-end pt-2">
-        <Button variant="outline" size="sm">
-          Editar
-        </Button>
-      </CardFooter>
-    </Card>
-  )
-}
 
 // Componente para renderizar a tabela de usuários
 const UsersTable = ({ users }: { users: AdminUser[] }) => {
@@ -520,75 +463,7 @@ const UsersTable = ({ users }: { users: AdminUser[] }) => {
   )
 }
 
-// Componente para renderizar a tabela de planos
-const PlansTable = ({ plans }: { plans: typeof userPlans }) => {
-  return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nome</TableHead>
-          <TableHead>Tipo</TableHead>
-          <TableHead>Preço</TableHead>
-          <TableHead>Ciclo</TableHead>
-          <TableHead>Recursos</TableHead>
-          <TableHead>Usuários</TableHead>
-          <TableHead className="text-right">Ações</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {plans.map((plan) => {
-          const userCount = adminUsers.filter((user) => user.planId === plan.id).length
-          return (
-            <TableRow key={plan.id}>
-              <TableCell className="font-medium">{plan.name}</TableCell>
-              <TableCell>
-                <Badge
-                  variant="outline"
-                  className={
-                    plan.type === "basic"
-                      ? "border-gray-500 text-gray-500"
-                      : plan.type === "standard"
-                        ? "border-blue-500 text-blue-500"
-                        : plan.type === "premium"
-                          ? "border-purple-500 text-purple-500"
-                          : "border-green-500 text-green-500"
-                  }
-                >
-                  {plan.type === "basic" && "Básico"}
-                  {plan.type === "standard" && "Padrão"}
-                  {plan.type === "premium" && "Premium"}
-                  {plan.type === "enterprise" && "Empresarial"}
-                </Badge>
-              </TableCell>
-              <TableCell>R$ {plan.price.toFixed(2)}</TableCell>
-              <TableCell>{plan.billingCycle === "monthly" ? "Mensal" : "Anual"}</TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-1">
-                  {plan.features.slice(0, 2).map((feature, index) => (
-                    <Badge key={index} variant="secondary" className="font-normal">
-                      {feature}
-                    </Badge>
-                  ))}
-                  {plan.features.length > 2 && (
-                    <Badge variant="secondary" className="font-normal">
-                      +{plan.features.length - 2}
-                    </Badge>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>{userCount}</TableCell>
-              <TableCell className="text-right">
-                <Button variant="ghost" size="sm">
-                  Editar
-                </Button>
-              </TableCell>
-            </TableRow>
-          )
-        })}
-      </TableBody>
-    </Table>
-  )
-}
+
 
 // Componente para renderizar os cards de usuários
 const UsersCards = ({ users }: { users: AdminUser[] }) => {
@@ -605,16 +480,6 @@ const UsersCards = ({ users }: { users: AdminUser[] }) => {
   )
 }
 
-// Componente para renderizar os cards de planos
-const PlansCards = ({ plans }: { plans: typeof userPlans }) => {
-  return (
-    <div className="grid grid-cols-1 gap-4">
-      {plans.map((plan) => (
-        <PlanCard key={plan.id} plan={plan} />
-      ))}
-    </div>
-  )
-}
 
 export default function AdminUsersPage() {
   const [searchTerm, setSearchTerm] = useState("")
