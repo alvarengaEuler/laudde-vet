@@ -86,7 +86,7 @@ const planFormSchema = z.object({
   maxClinics: z.coerce.number().int().min(-1, {
     message: "Use -1 para ilimitado ou um número positivo.",
   }),
-  includesSupport: z.boolean().optional().default(false),
+  includesSupport: z.boolean().default(false)
 })
 
 type PlanFormValues = z.infer<typeof planFormSchema>
@@ -102,7 +102,8 @@ const PlanForm = ({
   onCancel: () => void
 }) => {
   const form = useForm<PlanFormValues>({
-    resolver: zodResolver(planFormSchema),
+    resolver: zodResolver(planFormSchema) as any,
+
     defaultValues: defaultValues || {
       name: "",
       type: "basic",
@@ -115,20 +116,23 @@ const PlanForm = ({
       includesSupport: false,
     },
   })
+  
 
   const [newFeature, setNewFeature] = useState("")
+  const features = form.watch("features") || []
 
   // Função para adicionar um novo recurso
-  const addFeature = (currentFeatures: string[], newFeature: string) => {
+  const handleAddFeature = () => {
     if (newFeature.trim()) {
-      return [...currentFeatures, newFeature.trim()]
+      form.setValue("features", [...features, newFeature.trim()], { shouldValidate: true })
+      setNewFeature("")
     }
-    return currentFeatures
   }
 
   // Função para remover um recurso
-  const removeFeature = (currentFeatures: string[], index: number) => {
-    return currentFeatures.filter((_, i) => i !== index)
+  const handleRemoveFeature = (index: number) => {
+    const updatedFeatures = features.filter((_, i) => i !== index)
+    form.setValue("features", updatedFeatures, { shouldValidate: true })
   }
 
   return (
@@ -213,61 +217,52 @@ const PlanForm = ({
         <FormField
           control={form.control}
           name="features"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Recursos</FormLabel>
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Adicionar recurso..."
-                      value={newFeature}
-                      onChange={(e) => setNewFeature(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault()
-                          field.onChange(addFeature(field.value, newFeature))
-                          setNewFeature("")
-                        }
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        field.onChange(addFeature(field.value, newFeature))
-                        setNewFeature("")
-                      }}
-                    >
-                      Adicionar
-                    </Button>
-                  </div>
-
-                  {field.value.length > 0 ? (
-                    <div className="space-y-2">
-                      {field.value.map((feature, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                          <span>{feature}</span>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => field.onChange(removeFeature(field.value, index))}
-                            className="h-8 w-8 p-0"
-                          >
-                            <X className="h-4 w-4" />
-                            <span className="sr-only">Remover</span>
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-sm text-muted-foreground">Nenhum recurso adicionado.</p>
-                  )}
+          render={() => (
+            <FormItem>
+              <FormLabel>Recursos</FormLabel>
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Adicionar recurso..."
+                    value={newFeature}
+                    onChange={(e) => setNewFeature(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault()
+                        handleAddFeature()
+                      }
+                    }}
+                  />
+                  <Button type="button" onClick={handleAddFeature}>
+                    Adicionar
+                  </Button>
                 </div>
-                <FormMessage />
-              </FormItem>
-            )
-          }}
+
+                {features.length > 0 ? (
+                  <div className="space-y-2">
+                    {features.map((feature, index) => (
+                      <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-md">
+                        <span>{feature}</span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleRemoveFeature(index)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <X className="h-4 w-4" />
+                          <span className="sr-only">Remover</span>
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Nenhum recurso adicionado.</p>
+                )}
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
         />
 
         <Separator />
@@ -329,7 +324,7 @@ const PlanForm = ({
                 <FormDescription>Inclui suporte prioritário por email e telefone.</FormDescription>
               </div>
               <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                <Switch checked={field.value ?? false} onCheckedChange={field.onChange} />
               </FormControl>
             </FormItem>
           )}
