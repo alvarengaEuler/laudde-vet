@@ -65,7 +65,7 @@ const planFormSchema = z.object({
   name: z.string().min(2, {
     message: "O nome do plano deve ter pelo menos 2 caracteres.",
   }),
-  type: z.enum(["basic", "standard", "premium", "enterprise"], {
+  type: z.enum(["Básico", "standard", "premium", "enterprise"], {
     required_error: "Selecione um tipo de plano.",
   }),
   price: z.coerce.number().min(0, {
