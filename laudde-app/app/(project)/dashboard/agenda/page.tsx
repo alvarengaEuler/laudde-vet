@@ -309,7 +309,7 @@ const AppointmentForm = ({
     },
   )
 
-  const handleChange = (field: keyof AppointmentEvent, value: any) => {
+  const handleChange = (field: keyof AppointmentEvent, value: string | Date | undefined) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
@@ -432,7 +432,7 @@ const AppointmentForm = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Tipo</label>
-          <Select value={formData.type} onValueChange={(value: any) => handleChange("type", value)}>
+          <Select value={formData.type} onValueChange={(value: AppointmentEvent["type"]) => handleChange("type", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o tipo" />
             </SelectTrigger>
@@ -448,7 +448,7 @@ const AppointmentForm = ({
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-          <Select value={formData.status} onValueChange={(value: any) => handleChange("status", value)}>
+          <Select value={formData.status} onValueChange={(value: AppointmentEvent["status"]) => handleChange("status", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Selecione o status" />
             </SelectTrigger>

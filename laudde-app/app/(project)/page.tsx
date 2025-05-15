@@ -483,8 +483,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-gray-600">
-                "O Laudde revolucionou minha rotina de trabalho. Consigo criar laudos profissionais em metade do tempo
-                que levava antes, e os modelos de texto são extremamente úteis."
+                &quot;O Laudde revolucionou minha rotina de trabalho. Consigo criar laudos profissionais em metade do tempo
+                que levava antes, e os modelos de texto são extremamente úteis.&quot;
               </p>
               <div className="flex mt-4 text-yellow-400">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -536,8 +536,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-gray-600">
-                "A gestão financeira do Laudde me ajudou a ter uma visão clara da minha receita. Agora consigo enviar
-                relatórios financeiros para as clínicas parceiras com apenas alguns cliques."
+                &quot;A gestão financeira do Laudde me ajudou a ter uma visão clara da minha receita. Agora consigo enviar
+                relatórios financeiros para as clínicas parceiras com apenas alguns cliques.&quot;
               </p>
               <div className="flex mt-4 text-yellow-400">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -589,8 +589,8 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-gray-600">
-                "Os tutores adoram receber os laudos pelo link compartilhável. A plataforma é intuitiva e me permite
-                duplicar laudos semelhantes, economizando muito tempo no dia a dia."
+                &quot;Os tutores adoram receber os laudos pelo link compartilhável. A plataforma é intuitiva e me permite
+                duplicar laudos semelhantes, economizando muito tempo no dia a dia.&quot;
               </p>
               <div className="flex mt-4 text-yellow-400">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
