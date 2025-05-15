@@ -6,7 +6,7 @@ import { FileText, DollarSign, Users } from "lucide-react"
 import StatsCard from "@/components/dashboard/stats-card"
 import RevenueChart from "@/components/dashboard/revenue-chart"
 import RecentPatients from "@/components/dashboard/recent-patients"
-import { getMonthlyReportCount, getMonthlyRevenue, getMonthlyRevenueBySource, getRecentPatients } from "@/lib/mock-data"
+import { getMonthlyRevenueBySource, getRecentPatients } from "@/lib/mock-data"
 import { useState } from "react"
 import { Calendar, ArrowRight, BarChart2 } from "lucide-react"
 
@@ -67,8 +67,6 @@ export default function Dashboard() {
     return reportDate >= startDate && reportDate <= endDate
   }).length
 
-  const monthlyReportCount = getMonthlyReportCount()
-  const monthlyRevenue = getMonthlyRevenue()
   const revenueBySource = getMonthlyRevenueBySource()
   const recentPatients = getRecentPatients(5)
 

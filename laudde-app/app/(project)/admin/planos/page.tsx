@@ -441,7 +441,7 @@ const PlanCard = ({
             <AlertDialogHeader>
               <AlertDialogTitle>Excluir Plano</AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja excluir o plano "{plan.name}"? Esta ação não pode ser desfeita.
+                Tem certeza que deseja excluir o plano &quot;{plan.name}&quot;? Esta ação não pode ser desfeita.
                 {userCount > 0 && (
                   <p className="mt-2 text-destructive font-semibold">
                     Atenção: Este plano está sendo usado por {userCount} usuário(s).
@@ -567,7 +567,7 @@ const PlansTable = ({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Excluir Plano</AlertDialogTitle>
                         <AlertDialogDescription>
-                          Tem certeza que deseja excluir o plano "{plan.name}"? Esta ação não pode ser desfeita.
+                          Tem certeza que deseja excluir o plano &quot;{plan.name}&quot;? Esta ação não pode ser desfeita.
                           {userCount > 0 && (
                             <p className="mt-2 text-destructive font-semibold">
                               Atenção: Este plano está sendo usado por {userCount} usuário(s).
