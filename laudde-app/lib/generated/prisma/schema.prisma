@@ -1,0 +1,237 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum UserRole {
+  admin
+  veterinarian
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum AgeUnit {
+  YEARS
+  MONTHS
+  DAYS
+}
+
+enum ExamType {
+  OLTRASOUND
+  X_RAY
+}
+
+enum UltrasoundCategory {
+  ABDOMINAL
+  CARDIAC
+  REPRODUCTIVE
+  MUSCULOSKELETAL
+  THYROID
+  OVARIAN
+  PROSTATE
+  URINARY
+  ABDOMEN
+  THORACIC
+  ABDOMEN_PELVIS
+  OCULAR
+}
+
+enum XRayCategory {
+  THORACIC
+  ABDOMINAL
+  SKELETAL
+  DENTAL
+}
+
+enum ReportStatus {
+  DRAFT
+  COMPLETED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  CASH
+  PIX
+  CHECK
+}
+
+enum PaymentSource {
+  CLINIC
+  PATIENT_OWNER
+  VETERINARIAN
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum TransactionStatus {
+  COMPLETED
+  PENDINHG
+}
+
+model User {
+  id        String       @id @default(uuid())
+  name      String
+  email     String       @unique
+  password  String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  profile   UserProfile?
+  role      UserRole
+}
+
+model UserProfile {
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  name                String
+  cnpj                String?  @unique
+  CRMV                String?  @unique
+  phone               String?
+  instagramHandle     String?
+  instagramURL        String?
+  twitterHandle       String?
+  twitterURL          String?
+  websiteHandle       String?
+  websiteURL          String?
+  address             String?
+  city                String?
+  state               String?
+  profilePictureURL   String?
+  logoPictureURL      String?
+  signaturePictureURL String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id])
+}
+
+model Patient {
+  id         String   @id @default(uuid())
+  name       String
+  species    String
+  breed      String
+  sex        Sex
+  age        Int
+  ageUnit    AgeUnit
+  ownerName  String
+  ownerPhone String
+  createdAt  DateTime @default(now())
+  reports    Report[]
+
+  Payment               Payment[]
+  financialTransactions FinancialTransaction[]
+}
+
+model Clinic {
+  id           String                 @id @default(uuid())
+  name         String
+  cnpj         String                 @unique
+  address      String
+  city         String
+  state        String
+  createdAt    DateTime               @default(now())
+  reports      Report[]
+  payments     Payment[]
+  transactions FinancialTransaction[]
+}
+
+model Report {
+  id                 String                 @id @default(uuid())
+  patientId          String
+  clinicId           String
+  type               ExamType
+  categoryUltrasound UltrasoundCategory?
+  categoryXRay       XRayCategory?
+  findings           String
+  conclusion         String
+  createdAt          DateTime               @default(now())
+  status             ReportStatus
+  baseValue          Float
+  additionalValue    Float
+  code               String                 @unique
+  images             ReportImage[] // Lista de URLs ou paths
+  measurements       Measurement[]
+  payment            Payment?
+  patient            Patient                @relation(fields: [patientId], references: [id])
+  clinic             Clinic                 @relation(fields: [clinicId], references: [id])
+  transactions       FinancialTransaction[]
+}
+
+model ReportImage {
+  id        String   @id @default(uuid())
+  reportId  String
+  url       String
+  createdAt DateTime @default(now())
+  report    Report   @relation(fields: [reportId], references: [id])
+}
+
+model Measurement {
+  id       String @id @default(uuid())
+  organ    String
+  value    String
+  report   Report @relation(fields: [reportId], references: [id])
+  reportId String
+}
+
+model TextTemplate {
+  id                 String              @id @default(uuid())
+  title              String
+  categoryUltrasound UltrasoundCategory?
+  categoryXRay       XRayCategory?
+  content            String
+  createdAt          DateTime            @default(now())
+}
+
+model ConclusionTemplate {
+  id                 String              @id @default(uuid())
+  title              String
+  categoryUltrasound UltrasoundCategory?
+  categoryXRay       XRayCategory?
+  content            String
+  createdAt          DateTime            @default(now())
+}
+
+model Payment {
+  id       String            @id @default(uuid())
+  reportId String            @unique
+  amount   Float
+  method   PaymentMethod
+  source   PaymentSource
+  sourceId String
+  date     DateTime
+  status   TransactionStatus
+  report   Report            @relation(fields: [reportId], references: [id])
+  clinic   Clinic?           @relation(fields: [sourceId], references: [id], map: "Payment_clinic_sourceId_fkey")
+  patient  Patient?          @relation(fields: [sourceId], references: [id], map: "Payment_patient_sourceId_fkey")
+}
+
+model FinancialTransaction {
+  id               String            @id @default(uuid())
+  type             TransactionType
+  category         String
+  description      String
+  amount           Float
+  date             DateTime
+  relatedReportId  String?
+  relatedClinicId  String?
+  relatedPatientId String?
+  paymentMethod    String?
+  status           TransactionStatus
+  report           Report?           @relation(fields: [relatedReportId], references: [id])
+  clinic           Clinic?           @relation(fields: [relatedClinicId], references: [id])
+  patient          Patient?          @relation(fields: [relatedPatientId], references: [id])
+}
