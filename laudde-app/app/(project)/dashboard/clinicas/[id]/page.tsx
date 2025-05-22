@@ -9,12 +9,6 @@ import { getClinicById } from "@/lib/clinic"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
 
-export type ClinidetailcPageProps = {
-  params: {
-    id: string;
-  };
-};
-
 
 async function ClinicaDetalhes({ id }: { id: string }) {
   const clinic = await getClinicById(id)
@@ -121,7 +115,7 @@ function ClinicaDetalhesSkeleton() {
   )
 }
 
-export default async function ClinicaDetalhesPage({params}: {params: Promise<ClinidetailcPageProps>}) {
+export default async function ClinicaDetalhesPage({ params }: { params: Promise<{ id: string }>}) {
  const { id } = await params;
   return (
     <Suspense fallback={<ClinicaDetalhesSkeleton />}>
