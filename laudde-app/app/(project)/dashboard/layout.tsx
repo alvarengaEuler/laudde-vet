@@ -6,6 +6,7 @@ import Sidebar from "@/components/sidebar"
 import MobileNavigation from "@/components/mobile-navigation"
 import { ThemeProvider } from "@/components/theme-provider"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Toaster } from "sonner"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -32,6 +33,7 @@ export default function RootLayout({
                 </div>
                 {children}
               </div>
+              <Toaster />
               <MobileNavigation />
             </div>
           </div>
