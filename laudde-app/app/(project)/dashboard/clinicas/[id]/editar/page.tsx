@@ -41,7 +41,7 @@ export type EditClinicPageProps = {
 };
 
 
-export default function EditarClinicaPage({ params }: EditClinicPageProps) {
+export default function EditarClinicaPage({ params }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
