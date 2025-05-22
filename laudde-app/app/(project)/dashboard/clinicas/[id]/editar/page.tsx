@@ -34,14 +34,14 @@ const clinicSchema = z.object({
 
 type ClinicFormData = z.infer<typeof clinicSchema>
 
-export type PageProps = {
+export type EditClinicPageProps = {
   params: {
     id: string;
   };
 };
 
 
-export default function EditarClinicaPage({ params }: PageProps) {
+export default function EditarClinicaPage({ params }: EditClinicPageProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
