@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { getClinicById } from "@/lib/clinic"
 import { Skeleton } from "@/components/ui/skeleton"
 import Link from "next/link"
+import { PageProps } from "./editar/page"
 
 async function ClinicaDetalhes({ id }: { id: string }) {
   const clinic = await getClinicById(id)
@@ -114,7 +115,7 @@ function ClinicaDetalhesSkeleton() {
   )
 }
 
-export default async function ClinicaDetalhesPage({ params }: { params: { id: string } }) {
+export default async function ClinicaDetalhesPage({ params }: PageProps) {
   return (
     <Suspense fallback={<ClinicaDetalhesSkeleton />}>
       <ClinicaDetalhes id={params.id} />
