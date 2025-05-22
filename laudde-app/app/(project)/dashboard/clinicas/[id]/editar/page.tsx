@@ -19,6 +19,7 @@ import {
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { use } from 'react'
 
 // Validação com Zod
 const clinicSchema = z.object({
@@ -34,14 +35,13 @@ const clinicSchema = z.object({
 
 type ClinicFormData = z.infer<typeof clinicSchema>
 
-export type EditClinicPageProps = {
-  params: {
-    id: string;
-  };
-};
+interface EditParams {
+  id: string;
+}
 
 
-export default function EditarClinicaPage({ params }) {
+export default function EditarClinicaPage({ params }: { params: Promise<EditParams> }) {
+  const { id } = use(params); 
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -71,11 +71,11 @@ export default function EditarClinicaPage({ params }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ id: params.id, ...data }),
+      body: JSON.stringify({ id: id, ...data }),
     })
 
     if (response.ok) {
-      router.push(`/dashboard/clinicas/${params.id}`)
+      router.push(`/dashboard/clinicas/${id}`)
     } else {
       alert('Erro ao atualizar clínica.')
     }
@@ -86,7 +86,7 @@ export default function EditarClinicaPage({ params }) {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center gap-2">
-        <Link href={`/dashboard/clinicas/${params.id}`}>
+        <Link href={`/dashboard/clinicas/${id}`}>
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>
