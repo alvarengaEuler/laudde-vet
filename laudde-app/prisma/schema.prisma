@@ -93,6 +93,10 @@ model User {
   updatedAt DateTime @updatedAt 
   profile   UserProfile?
   role  UserRole
+
+  patient Patient[]
+  veterinarian Veterinarian[]
+  clinic Clinic[]
 }
 
 model UserProfile {
@@ -131,28 +135,71 @@ model Patient {
   ownerPhone  String
   createdAt   DateTime @default(now())
   reports     Report[]
+  userId     String
+  user       User?    @relation(fields: [userId], references: [id])
 
   Payment Payment[]
   financialTransactions FinancialTransaction[]
+
+  PatientOwner PatientOwner[]
+}
+
+model PatientOwner {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  email     String?   @unique
+  address   String?
+  city      String?
+  state     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  patients  Patient[]
+}
+model Veterinarian {
+  id        String   @id @default(uuid())
+  name      String
+  phone     String
+  email     String?   @unique
+  address   String?
+  city      String?
+  state     String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  crm       String?   @unique
+  crmState  String?
+  crmNumber String?
+  crmExpirationDate DateTime?
+  crmIssuingAgency String?
+  crmIssuingState String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  reports   Report[]
 }
 
 model Clinic {
   id        String   @id @default(uuid())
   name      String
-  cnpj      String   @unique
-  address   String
-  city      String
-  state     String
+  cnpj      String?   @unique
+  address   String?
+  city      String?
+  state     String?
+  phone     String?
+  whatsapp     String?
+  email     String?   @unique
   createdAt DateTime @default(now())
   reports   Report[]
   payments  Payment[]
   transactions FinancialTransaction[]
+  userId String
+  user   User?    @relation(fields: [userId], references: [id])
 }
 
 model Report {
   id              String     @id @default(uuid())
   patientId       String
   clinicId        String
+  userId          String
   type            ExamType
   categoryUltrasound UltrasoundCategory?
   categoryXRay       XRayCategory?
@@ -169,6 +216,8 @@ model Report {
   patient         Patient    @relation(fields: [patientId], references: [id])
   clinic          Clinic     @relation(fields: [clinicId], references: [id])
   transactions    FinancialTransaction[]
+
+  Veterinarian Veterinarian[]
 }
 
 model ReportImage {

@@ -46,14 +46,14 @@ export default function LandingPage() {
               <a href="#faq" className="text-gray-600 hover:text-blue-600 transition-colors">
                 Perguntas Frequentes
               </a>
-              <Link
+              {/* <Link
                 href="/login"
                 className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
               >
                 Entrar
-              </Link>
+              </Link> */}
               <Link
-                href="/register"
+                href="/auth/login"
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Começar Agora
@@ -764,7 +764,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Link
-              href="/register"
+              href="/auth/login"
               className="px-8 py-4 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors text-center"
             >
               Começar Teste Gratuito

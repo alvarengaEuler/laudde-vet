@@ -1,12 +1,32 @@
 "use client"
+
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Plus } from "lucide-react"
-import { DataTable } from "@/components/ui/data-table"
-import { clinics } from "@/lib/mock-data"
 import { useRouter } from "next/navigation"
+import { DataTable } from "@/components/ui/data-table"
 
 export default function ClinicasPage() {
+  const [clinics, setClinics] = useState([])
+  const [loading, setLoading] = useState(true)
   const router = useRouter()
+
+  useEffect(() => {
+    async function fetchClinics() {
+      try {
+        const res = await fetch("/api/clinics") // ajuste o endpoint se necessário
+        if (!res.ok) throw new Error("Erro ao buscar clínicas")
+        const data = await res.json()
+        setClinics(data)
+      } catch (error) {
+        console.error("Erro ao buscar clínicas:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchClinics()
+  }, [])
 
   const columns = [
     {
@@ -25,7 +45,12 @@ export default function ClinicasPage() {
     {
       key: "createdAt",
       header: "Cadastro",
-      render: (clinic: any) => <span>{new Date(clinic.createdAt).toLocaleDateString("pt-BR")}</span>,
+      render: (clinic: any) =>
+        clinic.createdAt ? (
+          <span>{new Date(clinic.createdAt).toLocaleDateString("pt-BR")}</span>
+        ) : (
+          "-"
+        ),
     },
   ]
 
@@ -49,14 +74,18 @@ export default function ClinicasPage() {
         </Link>
       </div>
 
-      <div className=" rounded-xl  border border-gray-100 dark:border-gray-800 p-4 sm:p-6">
-        <DataTable
-          data={clinics}
-          columns={columns}
-          searchable={true}
-          searchKeys={["name", "cnpj", "city"]}
-          onRowClick={handleRowClick}
-        />
+      <div className="rounded-xl  dark:border-gray-800 ">
+        {loading ? (
+          <p>Carregando...</p>
+        ) : (
+          <DataTable
+            data={clinics}
+            columns={columns}
+            searchable={true}
+            searchKeys={["name", "cnpj", "city"]}
+            onRowClick={handleRowClick}
+          />
+        )}
       </div>
     </div>
   )
