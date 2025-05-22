@@ -184,9 +184,9 @@ model Clinic {
   address   String?
   city      String?
   state     String?
-  phone     String?
-  whatsapp     String?
-  email     String?   @unique
+  phone     String
+  whatsapp     String
+  email     String   @unique
   createdAt DateTime @default(now())
   reports   Report[]
   payments  Payment[]
