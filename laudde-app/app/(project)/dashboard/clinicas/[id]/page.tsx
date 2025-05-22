@@ -121,10 +121,12 @@ function ClinicaDetalhesSkeleton() {
   )
 }
 
-export default async function ClinicaDetalhesPage({ params }: ClinidetailcPageProps) {
+export default async function ClinicaDetalhesPage({params}: {params: Promise<ClinidetailcPageProps>}) {
+ const { id } = await params;
   return (
     <Suspense fallback={<ClinicaDetalhesSkeleton />}>
-      <ClinicaDetalhes id={params.id} />
+     
+      <ClinicaDetalhes id={id} />
     </Suspense>
   )
 }
