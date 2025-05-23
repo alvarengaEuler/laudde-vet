@@ -649,7 +649,7 @@ export default function AgendaPage() {
   }, [])
 
   return (
-    <div className="space-y-4 border-2 border-red-500 sm:space-y-6">
+    <div className="border-2sm:space-y-6 space-y-4">
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-xl font-bold sm:text-2xl">Agenda</h1>

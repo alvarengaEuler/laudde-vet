@@ -1,16 +1,28 @@
 'use client'
 import Link from 'next/link'
-import { Plus, Calendar, Phone, Mail } from 'lucide-react'
+import { useState } from 'react'
+import { Plus, Calendar, Phone, Pencil, Trash2, User } from 'lucide-react'
 import { DataTable } from '@/components/ui/data-table'
 import { patients } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+// import { useToast } from "@/hooks/use-toast"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 export default function PacientesPage() {
   const router = useRouter()
+  // const { toast } = useToast()
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card')
+  const [patientsList, setPatientsList] = useState(patients)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const columns = [
     {
@@ -50,16 +62,51 @@ export default function PacientesPage() {
       header: 'Telefone',
     },
     {
-      key: 'createdAt',
-      header: 'Cadastro',
+      key: 'actions',
+      header: 'Ações',
       render: (patient: any) => (
-        <span>{new Date(patient.createdAt).toLocaleDateString('pt-BR')}</span>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation()
+              router.push(`/dashboard/pacientes/${patient.id}/editar`)
+            }}
+          >
+            <Pencil className="h-4 w-4" />
+            <span className="sr-only">Editar</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-red-500 hover:bg-red-50 hover:text-red-700"
+            onClick={(e) => {
+              e.stopPropagation()
+              setConfirmDelete(patient.id)
+            }}
+          >
+            <Trash2 className="h-4 w-4" />
+            <span className="sr-only">Excluir</span>
+          </Button>
+        </div>
       ),
     },
   ]
 
   const handleRowClick = (patient: any) => {
     router.push(`/dashboard/pacientes/${patient.id}`)
+  }
+
+  const handleDeletePatient = () => {
+    if (confirmDelete) {
+      setPatientsList((prev) => prev.filter((patient) => patient.id !== confirmDelete))
+      // toast({
+      //   title: "Paciente excluído",
+      //   description: "O paciente foi excluído com sucesso.",
+      // })
+      setConfirmDelete(null)
+    }
   }
 
   return (
@@ -97,9 +144,9 @@ export default function PacientesPage() {
       </div>
 
       {viewMode === 'list' ? (
-        <div className="rounded-xl border border-gray-100 bg-white p-4 sm:p-6 dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
+        <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:p-6 dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
           <DataTable
-            data={patients}
+            data={patientsList}
             columns={columns}
             searchable={true}
             searchKeys={['name', 'species', 'breed', 'ownerName']}
@@ -108,7 +155,7 @@ export default function PacientesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {patients.map((patient) => (
+          {patientsList.map((patient) => (
             <Card
               key={patient.id}
               className="cursor-pointer transition-shadow hover:shadow-md dark:border-gray-800"
@@ -129,9 +176,32 @@ export default function PacientesPage() {
                           {patient.species} • {patient.breed}
                         </p>
                       </div>
-                      <span className="rounded-full bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800">
-                        {patient.sex === 'male' ? 'Macho' : 'Fêmea'}
-                      </span>
+                      <div className="flex gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            router.push(`/dashboard/pacientes/${patient.id}/editar`)
+                          }}
+                        >
+                          <Pencil className="h-4 w-4" />
+                          <span className="sr-only">Editar</span>
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-red-500 hover:bg-red-50 hover:text-red-700"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setConfirmDelete(patient.id)
+                          }}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          <span className="sr-only">Excluir</span>
+                        </Button>
+                      </div>
                     </div>
                     <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                       <div className="mb-1 flex items-center gap-1">
@@ -139,9 +209,12 @@ export default function PacientesPage() {
                         <span>
                           {patient.age} {patient.ageUnit === 'years' ? 'anos' : 'meses'}
                         </span>
+                        <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
+                          {patient.sex === 'male' ? 'Macho' : 'Fêmea'}
+                        </span>
                       </div>
                       <div className="mb-1 flex items-center gap-1">
-                        <Mail size={14} />
+                        <User size={14} />
                         <span>{patient.ownerName}</span>
                       </div>
                       <div className="flex items-center gap-1">
@@ -156,6 +229,26 @@ export default function PacientesPage() {
           ))}
         </div>
       )}
+
+      {/* Modal de confirmação de exclusão */}
+      <Dialog open={!!confirmDelete} onOpenChange={(open) => !open && setConfirmDelete(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar exclusão</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja excluir este paciente? Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDelete(null)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleDeletePatient}>
+              Excluir
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
