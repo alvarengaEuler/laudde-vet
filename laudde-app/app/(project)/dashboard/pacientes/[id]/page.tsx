@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { Pencil, ArrowLeft, User, Calendar, Phone, PawPrintIcon as Paw, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -9,7 +9,15 @@ import { type Patient, getPatientById } from "@/lib/mock-data"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-export default function PacienteDetalhesPage({ params }: { params: { id: string } }) {
+
+interface PageParams {
+  id: string;
+}
+
+
+
+export default function PacienteDetalhesPage({ params }: { params: Promise<PageParams> }) {
+  const { id } = use(params); 
   const router = useRouter()
   const [patient, setPatient] = useState<Patient | null>(null)
   const [loading, setLoading] = useState(true)
@@ -17,13 +25,13 @@ export default function PacienteDetalhesPage({ params }: { params: { id: string 
   useEffect(() => {
     // Simulando carregamento de dados
     const timer = setTimeout(() => {
-      const foundPatient = getPatientById(params.id)
+      const foundPatient = getPatientById(id)
       setPatient(foundPatient || null)
       setLoading(false)
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [params.id])
+  }, [id])
 
   if (loading) {
     return (
@@ -84,7 +92,7 @@ export default function PacienteDetalhesPage({ params }: { params: { id: string 
           </Button>
           <h1 className="text-xl sm:text-2xl font-bold">{patient.name}</h1>
         </div>
-        <Button onClick={() => router.push(`/dashboard/pacientes/${params.id}/editar`)}>
+        <Button onClick={() => router.push(`/dashboard/pacientes/${id}/editar`)}>
           <Pencil className="h-4 w-4 mr-2" />
           Editar Paciente
         </Button>
