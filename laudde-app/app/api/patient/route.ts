@@ -25,9 +25,11 @@ export async function POST(req: Request) {
         age: body.age,
         ageUnit: body.ageUnit,
         weight: body.weight,
+        weightUnit: body.weightUnit,
         ownerName: body.ownerName,
         ownerPhone: body.ownerPhone,
         userId: '22a8ab94-b684-45e5-a484-9417ec1d6176',
+        patientOwnerId: '22a8ab94-b684-45e5-a484-9417ec1d6176',
 
       },
     });
