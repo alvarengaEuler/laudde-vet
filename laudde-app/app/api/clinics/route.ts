@@ -31,13 +31,10 @@ export async function POST(req: Request) {
     );
   }
 }
+
 export async function GET() {
   try {
-    const clinics = await prisma.clinic.findMany({
-      include: {
-        user: true,
-      },
-    });
+    const clinics = await prisma.clinic.findMany();
 
     return NextResponse.json(clinics);
   } catch (error) {
@@ -45,6 +42,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch clinics' }, { status: 500 });
   }
 }
+
 export async function DELETE(req: Request) {
   const { id } = await req.json();
 

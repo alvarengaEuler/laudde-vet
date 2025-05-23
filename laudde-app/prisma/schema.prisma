@@ -97,6 +97,8 @@ model User {
   patient Patient[]
   veterinarian Veterinarian[]
   clinic Clinic[]
+
+  PatientOwner PatientOwner[]
 }
 
 model UserProfile {
@@ -126,23 +128,28 @@ model UserProfile {
 model Patient {
   id          String   @id @default(uuid())
   name        String
-  species     String
-  breed       String
-  sex         Sex
-  age         Int
-  ageUnit     AgeUnit
-  ownerName   String
-  ownerPhone  String
+  species     String?
+  breed       String?
+  sex         Sex?
+  age         Int?
+  ageUnit     AgeUnit?
+  ownerName   String?
+  ownerPhone  String?
+  weight      String?
+  weightUnit  String?
   createdAt   DateTime @default(now())
+
+  userId        String
+  user          User?           @relation(fields: [userId], references: [id])
+
+  patientOwnerId String
+  patientOwner   PatientOwner   @relation(fields: [patientOwnerId], references: [id])
+
   reports     Report[]
-  userId     String
-  user       User?    @relation(fields: [userId], references: [id])
-
-  Payment Payment[]
+  Payment     Payment[]
   financialTransactions FinancialTransaction[]
-
-  PatientOwner PatientOwner[]
 }
+
 
 model PatientOwner {
   id        String   @id @default(uuid())
@@ -154,8 +161,13 @@ model PatientOwner {
   state     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
   patients  Patient[]
 }
+
 model Veterinarian {
   id        String   @id @default(uuid())
   name      String

@@ -57,7 +57,7 @@ export default function PacientesPage() {
   ]
 
   const handleRowClick = (patient: any) => {
-    router.push(`/pacientes/${patient.id}`)
+    router.push(`/dashboard/pacientes/${patient.id}`)
   }
 
   return (
@@ -110,7 +110,7 @@ export default function PacientesPage() {
             <Card
               key={patient.id}
               className="cursor-pointer hover:shadow-md transition-shadow dark:border-gray-800"
-              onClick={() => router.push(`/pacientes/${patient.id}`)}
+              onClick={() => router.push(`/dashboard/pacientes/${patient.id}`)}
             >
               <CardContent className="p-4">
                 <div className="flex items-start gap-4">
