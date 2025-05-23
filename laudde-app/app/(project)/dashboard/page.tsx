@@ -1,20 +1,22 @@
-"use client"
+'use client'
 
-import type React from "react"
+import type React from 'react'
 
-import { FileText, DollarSign, Users } from "lucide-react"
-import StatsCard from "@/components/dashboard/stats-card"
-import RevenueChart from "@/components/dashboard/revenue-chart"
-import RecentPatients from "@/components/dashboard/recent-patients"
-import { getMonthlyRevenueBySource, getRecentPatients } from "@/lib/mock-data"
-import { useState } from "react"
-import { Calendar, ArrowRight, BarChart2 } from "lucide-react"
+import { FileText, DollarSign, Users } from 'lucide-react'
+import StatsCard from '@/components/dashboard/stats-card'
+import RevenueChart from '@/components/dashboard/revenue-chart'
+import RecentPatients from '@/components/dashboard/recent-patients'
+import { getMonthlyRevenueBySource, getRecentPatients } from '@/lib/mock-data'
+import { useState } from 'react'
+import { Calendar, ArrowRight, BarChart2 } from 'lucide-react'
 
 // Substitua a função Dashboard pelo seguinte código
 export default function Dashboard() {
   const [dateRange, setDateRange] = useState({
-    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split("T")[0],
-    endDate: new Date().toISOString().split("T")[0],
+    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+      .toISOString()
+      .split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
   })
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,18 +33,18 @@ export default function Dashboard() {
 
   // Mock data for payments and reports
   const payments = [
-    { id: 1, date: "2024-01-15", amount: 150, status: "paid" },
-    { id: 2, date: "2024-01-20", amount: 200, status: "pending" },
-    { id: 3, date: "2024-02-01", amount: 100, status: "paid" },
-    { id: 4, date: "2024-02-10", amount: 50, status: "pending" },
-    { id: 5, date: "2024-03-01", amount: 250, status: "paid" },
+    { id: 1, date: '2024-01-15', amount: 150, status: 'paid' },
+    { id: 2, date: '2024-01-20', amount: 200, status: 'pending' },
+    { id: 3, date: '2024-02-01', amount: 100, status: 'paid' },
+    { id: 4, date: '2024-02-10', amount: 50, status: 'pending' },
+    { id: 5, date: '2024-03-01', amount: 250, status: 'paid' },
   ]
 
   const reports = [
-    { id: 1, createdAt: "2024-01-10" },
-    { id: 2, createdAt: "2024-01-25" },
-    { id: 3, createdAt: "2024-02-15" },
-    { id: 4, createdAt: "2024-03-05" },
+    { id: 1, createdAt: '2024-01-10' },
+    { id: 2, createdAt: '2024-01-25' },
+    { id: 3, createdAt: '2024-02-15' },
+    { id: 4, createdAt: '2024-03-05' },
   ]
 
   // Filtra os pagamentos pelo intervalo de datas
@@ -53,12 +55,12 @@ export default function Dashboard() {
 
   // Calcula o total recebido no período
   const totalReceived = filteredPayments
-    .filter((payment) => payment.status === "paid")
+    .filter((payment) => payment.status === 'paid')
     .reduce((sum, payment) => sum + payment.amount, 0)
 
   // Calcula o total a receber (pagamentos pendentes)
   const totalPending = payments
-    .filter((payment) => payment.status === "pending")
+    .filter((payment) => payment.status === 'pending')
     .reduce((sum, payment) => sum + payment.amount, 0)
 
   // Contagem de relatórios no período
@@ -72,37 +74,37 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">Dashboard</h1>
           <p className="text-sm text-gray-500">Visão geral do seu sistema de laudos</p>
         </div>
 
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 bg-white p-3 rounded-lg border border-gray-200 shadow-sm">
+        <div className="flex flex-col space-y-2 rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:space-x-4 sm:space-y-0">
           <div className="flex items-center">
-            <Calendar size={18} className="text-gray-500 mr-2" />
+            <Calendar size={18} className="mr-2 text-gray-500" />
             <input
               type="date"
               name="startDate"
               value={dateRange.startDate}
               onChange={handleDateChange}
-              className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+              className="rounded-md border border-gray-300 px-2 py-1 text-sm"
             />
           </div>
           <div className="flex items-center">
-            <ArrowRight size={18} className="text-gray-500 mx-1" />
+            <ArrowRight size={18} className="mx-1 text-gray-500" />
             <input
               type="date"
               name="endDate"
               value={dateRange.endDate}
               onChange={handleDateChange}
-              className="border border-gray-300 rounded-md px-2 py-1 text-sm"
+              className="rounded-md border border-gray-300 px-2 py-1 text-sm"
             />
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
         <StatsCard
           title="Laudos Emitidos"
           value={reportsInPeriod}
@@ -133,8 +135,11 @@ export default function Dashboard() {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <RevenueChart clinicRevenue={revenueBySource.clinic} individualRevenue={revenueBySource.individual} />
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
+        <RevenueChart
+          clinicRevenue={revenueBySource.clinic}
+          individualRevenue={revenueBySource.individual}
+        />
         <RecentPatients patients={recentPatients} />
       </div>
     </div>

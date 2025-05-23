@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, Save, Building2 } from 'lucide-react'
 
-import { estadosBrasil } from "@/lib/utils/br-states"
+import { estadosBrasil } from '@/lib/utils/br-states'
 
 import {
   Select,
@@ -15,7 +15,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -36,12 +36,11 @@ const clinicSchema = z.object({
 type ClinicFormData = z.infer<typeof clinicSchema>
 
 interface EditParams {
-  id: string;
+  id: string
 }
 
-
 export default function EditarClinicaPage({ params }: { params: Promise<EditParams> }) {
-  const { id } = use(params); 
+  const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -91,7 +90,7 @@ export default function EditarClinicaPage({ params }: { params: Promise<EditPara
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <h1 className="text-xl sm:text-2xl font-bold">Editar Clínica</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Editar Clínica</h1>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -103,21 +102,36 @@ export default function EditarClinicaPage({ params }: { params: Promise<EditPara
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <InputField label="Clínica (obrigatório)" name="name" error={errors.name?.message} register={register} />
-              <InputField label="Endereço" name="address" error={errors.address?.message} register={register} />
-              <InputField label="Cidade" name="city" error={errors.city?.message} register={register} />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <InputField
+                label="Clínica (obrigatório)"
+                name="name"
+                error={errors.name?.message}
+                register={register}
+              />
+              <InputField
+                label="Endereço"
+                name="address"
+                error={errors.address?.message}
+                register={register}
+              />
+              <InputField
+                label="Cidade"
+                name="city"
+                error={errors.city?.message}
+                register={register}
+              />
 
               {/* Select do Estado */}
               <div className="space-y-1">
-                <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label
+                  htmlFor="state"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
                   Estado (obrigatório)
                 </label>
-                <Select
-                  value={stateValue}
-                  onValueChange={(value) => setValue('state', value)}
-                >
-                  <SelectTrigger className="w-full border border-gray-300 rounded-md px-3 py-2">
+                <Select value={stateValue} onValueChange={(value) => setValue('state', value)}>
+                  <SelectTrigger className="w-full rounded-md border border-gray-300 px-3 py-2">
                     <SelectValue placeholder="Selecione o estado" />
                   </SelectTrigger>
                   <SelectContent>
@@ -131,13 +145,33 @@ export default function EditarClinicaPage({ params }: { params: Promise<EditPara
                 {errors.state && <p className="text-sm text-red-500">{errors.state.message}</p>}
               </div>
 
-              <InputField label="Email (obrigatório)" name="email" error={errors.email?.message} register={register} />
-              <InputField label="Telefone" name="phone" error={errors.phone?.message} register={register} />
-              <InputField label="WhatsApp (obrigatório)" name="whatsapp" error={errors.whatsapp?.message} register={register} />
-              <InputField label="CNPJ" name="cnpj" error={errors.cnpj?.message} register={register} />
+              <InputField
+                label="Email (obrigatório)"
+                name="email"
+                error={errors.email?.message}
+                register={register}
+              />
+              <InputField
+                label="Telefone"
+                name="phone"
+                error={errors.phone?.message}
+                register={register}
+              />
+              <InputField
+                label="WhatsApp (obrigatório)"
+                name="whatsapp"
+                error={errors.whatsapp?.message}
+                register={register}
+              />
+              <InputField
+                label="CNPJ"
+                name="cnpj"
+                error={errors.cnpj?.message}
+                register={register}
+              />
             </div>
             <div className="pt-4">
-              <Button type="submit" variant="success"  className="flex items-center gap-2">
+              <Button type="submit" variant="success" className="flex items-center gap-2">
                 <Save className="h-4 w-4" />
                 Salvar Alterações
               </Button>
@@ -170,7 +204,7 @@ function InputField({
           {...register(name)}
           type="text"
           id={name}
-          className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800 dark:border-gray-700"
+          className="w-full rounded-md border bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-800"
         />
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}

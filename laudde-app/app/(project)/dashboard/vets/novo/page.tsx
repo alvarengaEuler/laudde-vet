@@ -1,24 +1,24 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner" // importa o sonner para exibir toasts
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner' // importa o sonner para exibir toasts
 
-import { veterinarianSchema } from "@/lib/utils/br-validations"
-import { formatPhone } from "@/lib/utils/masks"
+import { veterinarianSchema } from '@/lib/utils/br-validations'
+import { formatPhone } from '@/lib/utils/masks'
 
 export default function NewVetPage() {
   const router = useRouter()
 
   // Estado para armazenar os dados do formulário
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    whatsapp: "",
-    email: "",
-    crm: "",
-    crmNumber: "",
-    state: "",
+    name: '',
+    phone: '',
+    whatsapp: '',
+    email: '',
+    crm: '',
+    crmNumber: '',
+    state: '',
   })
 
   // Estado para armazenar erros de validação
@@ -26,15 +26,15 @@ export default function NewVetPage() {
 
   // Lida com alterações nos campos de input, aplicando máscaras conforme o campo
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target as HTMLInputElement;
+    const target = e.target as HTMLInputElement
 
-  if (!target) return;
+    if (!target) return
 
-  const { name, value } = target;
+    const { name, value } = target
 
     let maskedValue = value
 
-    if (name === "phone" || name === "whatsapp") maskedValue = formatPhone(value)
+    if (name === 'phone' || name === 'whatsapp') maskedValue = formatPhone(value)
 
     setFormData((prev) => ({
       ...prev,
@@ -57,7 +57,7 @@ export default function NewVetPage() {
         Object.entries(fieldErrors).map(([key, value]) => [key, value?.[0]])
       )
       setErrors(formattedErrors)
-      toast.error("Erro ao salvar. Verifique os campos.")
+      toast.error('Erro ao salvar. Verifique os campos.')
       return
     }
 
@@ -66,77 +66,70 @@ export default function NewVetPage() {
 
     try {
       // Aqui você faria a requisição real para salvar os dados
-      await fetch("/api/vets", { method: "POST", body: JSON.stringify(formData) })
+      await fetch('/api/vets', { method: 'POST', body: JSON.stringify(formData) })
 
-      toast.success("Veterinário cadastrado com sucesso!")
-      router.push("/dashboard/vets")
+      toast.success('Veterinário cadastrado com sucesso!')
+      router.push('/dashboard/vets')
     } catch (error) {
-      toast.error("Ocorreu um erro ao salvar. Tente novamente.")
-      console.error("Erro ao salvar:", error)
+      toast.error('Ocorreu um erro ao salvar. Tente novamente.')
+      console.error('Erro ao salvar:', error)
     }
   }
 
   return (
     <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold">Adicionar Veterinário</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Adicionar Veterinário</h1>
         <p className="text-sm text-gray-500">Cadastre uma novo veterinário parceiro</p>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl sm:p-6">
+      <div className="rounded-xl bg-white sm:p-6 dark:bg-gray-800">
         {/* Formulário com onSubmit */}
         <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-  
-
-             {/* Campo Nome */}
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+            {/* Campo Nome */}
             <div>
-              <label className="block text-sm font-medium mb-1">Nome do Veterinário</label>
+              <label className="mb-1 block text-sm font-medium">Nome do Veterinário</label>
               <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full border ${errors.name ? "border-red-500" : "border-gray-300"} rounded-lg px-3 py-2`}
+                className={`w-full border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2`}
               />
               {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
             </div>
             {/* phone */}
-          
+
             <div>
-              <label className="block text-sm font-medium mb-1">Telefone</label>
+              <label className="mb-1 block text-sm font-medium">Telefone</label>
               <input
                 type="tel"
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
                 maxLength={15}
-                className={`w-full border ${errors.whatsapp ? "border-red-500" : "border-gray-300"} rounded-lg px-3 py-2`}
+                className={`w-full border ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2`}
               />
               {errors.phone && <p className="text-sm text-red-600">{errors.phone}</p>}
             </div>
             {/* Campo Whatsapp */}
             <div>
-              <label className="block text-sm font-medium mb-1">Whatsapp</label>
+              <label className="mb-1 block text-sm font-medium">Whatsapp</label>
               <input
                 type="tel"
                 name="whatsapp"
                 value={formData.whatsapp}
                 onChange={handleChange}
                 maxLength={15}
-                className={`w-full border ${errors.whatsapp ? "border-red-500" : "border-gray-300"} rounded-lg px-3 py-2`}
+                className={`w-full border ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'} rounded-lg px-3 py-2`}
               />
               {errors.whatsapp && <p className="text-sm text-red-600">{errors.whatsapp}</p>}
             </div>
             {/* Campo Email */}
-            <InputField
-              label="Email"
-              name="email"
-              register={handleChange}
-              error={errors.email}
-            />
-            {/* Campo CRM */} 
-           
+            <InputField label="Email" name="email" register={handleChange} error={errors.email} />
+            {/* Campo CRM */}
+
             {/* Campo CRM Number */}
             <InputField
               label="CRM Number"
@@ -146,21 +139,18 @@ export default function NewVetPage() {
             />
           </div>
 
-     
-
-
           {/* Botões de ação */}
           <div className="flex justify-end gap-3">
             <button
               type="button"
-              onClick={() => router.push("/dashboard/vets")}
-              className="px-4 py-2 border border-gray-300 rounded-lg"
+              onClick={() => router.push('/dashboard/vets')}
+              className="rounded-lg border border-gray-300 px-4 py-2"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-blue-500 hover:bg-blue-500/90 text-white rounded-lg"
+              className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-500/90"
             >
               Salvar Veterinário
             </button>
@@ -192,7 +182,7 @@ function InputField({
           {...register(name)}
           type="text"
           id={name}
-          className="w-full px-3 py-2 border rounded-md bg-white dark:bg-gray-800 dark:border-gray-700"
+          className="w-full rounded-md border bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-800"
         />
       </div>
       {error && <p className="text-sm text-red-500">{error}</p>}

@@ -1,23 +1,20 @@
-"use client"
+'use client'
 
-import { useRouter } from "next/navigation"
-import { useState, useEffect, use } from "react"
-import { Pencil, ArrowLeft, User, Calendar, Phone, PawPrintIcon as Paw, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { type Patient, getPatientById } from "@/lib/mock-data"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import { useRouter } from 'next/navigation'
+import { useState, useEffect, use } from 'react'
+import { Pencil, ArrowLeft, User, Calendar, Phone, PawPrintIcon as Paw, Heart } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { type Patient, getPatientById } from '@/lib/mock-data'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface PageParams {
-  id: string;
+  id: string
 }
 
-
-
 export default function PacienteDetalhesPage({ params }: { params: Promise<PageParams> }) {
-  const { id } = use(params); 
+  const { id } = use(params)
   const router = useRouter()
   const [patient, setPatient] = useState<Patient | null>(null)
   const [loading, setLoading] = useState(true)
@@ -36,13 +33,13 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
   if (loading) {
     return (
       <div className="space-y-4 sm:space-y-6">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-10 w-24" />
         </div>
         <Card>
           <CardHeader>
-            <Skeleton className="h-7 w-40 mb-2" />
+            <Skeleton className="mb-2 h-7 w-40" />
             <Skeleton className="h-4 w-60" />
           </CardHeader>
           <CardContent className="space-y-4">
@@ -64,17 +61,17 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
     return (
       <div className="space-y-4 sm:space-y-6">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={() => router.push("/dashboard/pacientes")}>
+          <Button variant="outline" size="icon" onClick={() => router.push('/dashboard/pacientes')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-xl sm:text-2xl font-bold">Paciente não encontrado</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">Paciente não encontrado</h1>
         </div>
         <Card>
           <CardContent className="p-6 text-center">
             <p className="text-gray-500 dark:text-gray-400">
               O paciente que você está procurando não foi encontrado ou não existe.
             </p>
-            <Button className="mt-4" onClick={() => router.push("/dashboard/pacientes")}>
+            <Button className="mt-4" onClick={() => router.push('/dashboard/pacientes')}>
               Voltar para Pacientes
             </Button>
           </CardContent>
@@ -85,15 +82,15 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={() => router.push("/dashboard/pacientes")}>
+          <Button variant="outline" size="icon" onClick={() => router.push('/dashboard/pacientes')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-xl sm:text-2xl font-bold">{patient.name}</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">{patient.name}</h1>
         </div>
         <Button onClick={() => router.push(`/dashboard/pacientes/${id}/editar`)}>
-          <Pencil className="h-4 w-4 mr-2" />
+          <Pencil className="mr-2 h-4 w-4" />
           Editar Paciente
         </Button>
       </div>
@@ -114,10 +111,10 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="space-y-3">
                   <div className="flex items-start gap-2">
-                    <Paw className="h-5 w-5 text-gray-500 mt-0.5" />
+                    <Paw className="mt-0.5 h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">Espécie</p>
                       <p className="text-gray-600 dark:text-gray-400">{patient.species}</p>
@@ -125,7 +122,7 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Paw className="h-5 w-5 text-gray-500 mt-0.5" />
+                    <Paw className="mt-0.5 h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">Raça</p>
                       <p className="text-gray-600 dark:text-gray-400">{patient.breed}</p>
@@ -133,27 +130,29 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Heart className="h-5 w-5 text-gray-500 mt-0.5" />
+                    <Heart className="mt-0.5 h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">Sexo</p>
-                      <p className="text-gray-600 dark:text-gray-400">{patient.sex === "male" ? "Macho" : "Fêmea"}</p>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {patient.sex === 'male' ? 'Macho' : 'Fêmea'}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-3">
                   <div className="flex items-start gap-2">
-                    <Calendar className="h-5 w-5 text-gray-500 mt-0.5" />
+                    <Calendar className="mt-0.5 h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">Idade</p>
                       <p className="text-gray-600 dark:text-gray-400">
-                        {patient.age} {patient.ageUnit === "years" ? "anos" : "meses"}
+                        {patient.age} {patient.ageUnit === 'years' ? 'anos' : 'meses'}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <User className="h-5 w-5 text-gray-500 mt-0.5" />
+                    <User className="mt-0.5 h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">Tutor</p>
                       <p className="text-gray-600 dark:text-gray-400">{patient.ownerName}</p>
@@ -161,7 +160,7 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Phone className="h-5 w-5 text-gray-500 mt-0.5" />
+                    <Phone className="mt-0.5 h-5 w-5 text-gray-500" />
                     <div>
                       <p className="font-medium">Telefone do Tutor</p>
                       <p className="text-gray-600 dark:text-gray-400">{patient.ownerPhone}</p>
@@ -176,8 +175,10 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
         <TabsContent value="history">
           <Card>
             <CardContent className="p-6">
-              <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">Nenhum histórico disponível para este paciente.</p>
+              <div className="py-8 text-center">
+                <p className="text-gray-500 dark:text-gray-400">
+                  Nenhum histórico disponível para este paciente.
+                </p>
                 <Button className="mt-4">Adicionar Histórico</Button>
               </div>
             </CardContent>
@@ -187,9 +188,11 @@ export default function PacienteDetalhesPage({ params }: { params: Promise<PageP
         <TabsContent value="reports">
           <Card>
             <CardContent className="p-6">
-              <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">Nenhum laudo disponível para este paciente.</p>
-                <Button className="mt-4" onClick={() => router.push("/laudos/novo")}>
+              <div className="py-8 text-center">
+                <p className="text-gray-500 dark:text-gray-400">
+                  Nenhum laudo disponível para este paciente.
+                </p>
+                <Button className="mt-4" onClick={() => router.push('/laudos/novo')}>
                   Criar Novo Laudo
                 </Button>
               </div>

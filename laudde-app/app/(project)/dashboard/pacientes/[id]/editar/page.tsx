@@ -1,61 +1,71 @@
-"use client"
+'use client'
 
-import { useRouter } from "next/navigation"
-import { useState, useEffect, use } from "react"
-import { ArrowLeft } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { type Patient, getPatientById } from "@/lib/mock-data"
-import { Skeleton } from "@/components/ui/skeleton"
+import { useRouter } from 'next/navigation'
+import { useState, useEffect, use } from 'react'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { type Patient, getPatientById } from '@/lib/mock-data'
+import { Skeleton } from '@/components/ui/skeleton'
 
-import { z } from "zod"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const patientFormSchema = z.object({
-  name: z.string().min(1, "O nome do paciente é obrigatório"),
-  species: z.string().min(1, "A espécie é obrigatória"),
-  breed: z.string().min(1, "A raça é obrigatória"),
-  sex: z.enum(["male", "female"], {
-    required_error: "O sexo é obrigatório",
+  name: z.string().min(1, 'O nome do paciente é obrigatório'),
+  species: z.string().min(1, 'A espécie é obrigatória'),
+  breed: z.string().min(1, 'A raça é obrigatória'),
+  sex: z.enum(['male', 'female'], {
+    required_error: 'O sexo é obrigatório',
   }),
-  age: z.coerce.number().min(0, "A idade deve ser maior ou igual a zero"),
-  ageUnit: z.enum(["years", "months"], {
-    required_error: "A unidade de idade é obrigatória",
+  age: z.coerce.number().min(0, 'A idade deve ser maior ou igual a zero'),
+  ageUnit: z.enum(['years', 'months'], {
+    required_error: 'A unidade de idade é obrigatória',
   }),
-  ownerName: z.string().min(1, "O nome do tutor é obrigatório"),
-  ownerPhone: z.string().min(1, "O telefone do tutor é obrigatório"),
+  ownerName: z.string().min(1, 'O nome do tutor é obrigatório'),
+  ownerPhone: z.string().min(1, 'O telefone do tutor é obrigatório'),
 })
 
 type PatientFormValues = z.infer<typeof patientFormSchema>
 
-
 interface EditParams {
-  id: string;
+  id: string
 }
 
-
-
 export default function EditarPacientePage({ params }: { params: Promise<EditParams> }) {
-  const { id } = use(params); 
+  const { id } = use(params)
   const router = useRouter()
-  
+
   const [patient, setPatient] = useState<Patient | null>(null)
   const [loading, setLoading] = useState(true)
 
   const form = useForm<PatientFormValues>({
     resolver: zodResolver(patientFormSchema),
     defaultValues: {
-      name: "",
-      species: "",
-      breed: "",
-      sex: "male",
+      name: '',
+      species: '',
+      breed: '',
+      sex: 'male',
       age: 0,
-      ageUnit: "years",
-      ownerName: "",
-      ownerPhone: "",
+      ageUnit: 'years',
+      ownerName: '',
+      ownerPhone: '',
     },
   })
 
@@ -85,7 +95,7 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
   }, [id, form])
 
   const onSubmit = (data: PatientFormValues) => {
-    console.log("Dados atualizados do paciente:", data)
+    console.log('Dados atualizados do paciente:', data)
     // toast({
     //   title: "Paciente atualizado",
     //   description: "As informações do paciente foram atualizadas com sucesso.",
@@ -100,7 +110,7 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
           <Skeleton className="h-10 w-10 rounded-md" />
           <Skeleton className="h-8 w-48" />
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 dark:bg-gray-900 dark:border-gray-800">
+        <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:p-6 dark:border-gray-800 dark:bg-gray-900">
           <div className="space-y-4">
             {Array(6)
               .fill(0)
@@ -124,16 +134,16 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
     return (
       <div className="space-y-4 sm:space-y-6">
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" onClick={() => router.push("/dashboard/pacientes")}>
+          <Button variant="outline" size="icon" onClick={() => router.push('/dashboard/pacientes')}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <h1 className="text-xl sm:text-2xl font-bold">Paciente não encontrado</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">Paciente não encontrado</h1>
         </div>
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 text-center dark:bg-gray-900 dark:border-gray-800">
+        <div className="rounded-xl border border-gray-100 bg-white p-6 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900">
           <p className="text-gray-500 dark:text-gray-400">
             O paciente que você está tentando editar não foi encontrado ou não existe.
           </p>
-          <Button className="mt-4" onClick={() => router.push("/dashboard/pacientes")}>
+          <Button className="mt-4" onClick={() => router.push('/dashboard/pacientes')}>
             Voltar para Pacientes
           </Button>
         </div>
@@ -144,16 +154,20 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" onClick={() => router.push(`/dashboard/pacientes/${id}`)}>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => router.push(`/dashboard/pacientes/${id}`)}
+        >
           <ArrowLeft className="h-4 w-4" />
         </Button>
-        <h1 className="text-xl sm:text-2xl font-bold">Editar Paciente</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Editar Paciente</h1>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 sm:p-6 dark:bg-gray-900 dark:border-gray-800">
+      <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:p-6 dark:border-gray-800 dark:bg-gray-900">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="name"
@@ -182,7 +196,7 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
               <FormField
                 control={form.control}
                 name="breed"
@@ -219,8 +233,8 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-              <div className="flex flex-col sm:flex-row sm:space-x-3 space-y-4 sm:space-y-0">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
+              <div className="flex flex-col space-y-4 sm:flex-row sm:space-x-3 sm:space-y-0">
                 <FormField
                   control={form.control}
                   name="age"
@@ -285,8 +299,12 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
               )}
             />
 
-            <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-              <Button type="button" variant="outline" onClick={() => router.push(`/dashboard/pacientes/${id}`)}>
+            <div className="flex flex-col space-y-2 sm:flex-row sm:justify-end sm:space-x-3 sm:space-y-0">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => router.push(`/dashboard/pacientes/${id}`)}
+              >
                 Cancelar
               </Button>
               <Button type="submit">Salvar Alterações</Button>

@@ -86,21 +86,71 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto py-10">
-      <h1 className="text-xl font-bold mb-4">Cadastrar Usuário</h1>
+    <div className="mx-auto max-w-md py-10">
+      <h1 className="mb-4 text-xl font-bold">Cadastrar Usuário</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input name="name" placeholder="Nome" value={form.name} onChange={handleChange} required className="w-full p-2 border" />
-        <input name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} required className="w-full p-2 border" />
-        <input name="password" type="password" placeholder="Senha" value={form.password} onChange={handleChange} required className="w-full p-2 border" />
+        <input
+          name="name"
+          placeholder="Nome"
+          value={form.name}
+          onChange={handleChange}
+          required
+          className="w-full border p-2"
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          required
+          className="w-full border p-2"
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="Senha"
+          value={form.password}
+          onChange={handleChange}
+          required
+          className="w-full border p-2"
+        />
 
         <hr />
         <h2 className="text-lg font-semibold">Perfil</h2>
-        <input name="profile.name" placeholder="Nome do perfil" value={form.profile.name} onChange={handleChange} required className="w-full p-2 border" />
-        <input name="profile.phone" placeholder="Telefone" value={form.profile.phone} onChange={handleChange} className="w-full p-2 border" />
-        <input name="profile.city" placeholder="Cidade" value={form.profile.city} onChange={handleChange} className="w-full p-2 border" />
-        <input name="profile.state" placeholder="Estado" value={form.profile.state} onChange={handleChange} className="w-full p-2 border" />
+        <input
+          name="profile.name"
+          placeholder="Nome do perfil"
+          value={form.profile.name}
+          onChange={handleChange}
+          required
+          className="w-full border p-2"
+        />
+        <input
+          name="profile.phone"
+          placeholder="Telefone"
+          value={form.profile.phone}
+          onChange={handleChange}
+          className="w-full border p-2"
+        />
+        <input
+          name="profile.city"
+          placeholder="Cidade"
+          value={form.profile.city}
+          onChange={handleChange}
+          className="w-full border p-2"
+        />
+        <input
+          name="profile.state"
+          placeholder="Estado"
+          value={form.profile.state}
+          onChange={handleChange}
+          className="w-full border p-2"
+        />
 
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Cadastrar</button>
+        <button type="submit" className="rounded bg-blue-600 px-4 py-2 text-white">
+          Cadastrar
+        </button>
       </form>
 
       {message && <p className="mt-4">{message}</p>}
