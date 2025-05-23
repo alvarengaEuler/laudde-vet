@@ -160,18 +160,12 @@ model Veterinarian {
   id        String   @id @default(uuid())
   name      String
   phone     String
+  whatsapp  String
   email     String?   @unique
-  address   String?
-  city      String?
-  state     String?
   userId    String
   user      User     @relation(fields: [userId], references: [id])
-  crm       String?   @unique
-  crmState  String?
-  crmNumber String?
-  crmExpirationDate DateTime?
-  crmIssuingAgency String?
-  crmIssuingState String?
+ 
+  crmNumber String? @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   reports   Report[]

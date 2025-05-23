@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { LayoutDashboard, FileText, Users, Building2, FileCode, DollarSign, LogOut } from "lucide-react"
+import { LayoutDashboard, FileText, Users, Building2, FileCode, DollarSign, LogOut, BriefcaseMedical } from "lucide-react"
 
 const menuItems = [
   { name: "Dashboard-side", href: "/dashboard", icon: LayoutDashboard },
@@ -10,6 +10,7 @@ const menuItems = [
   { name: "Laudos", href: "/dashboard/laudos", icon: FileText },
   { name: "Pacientes", href: "/dashboard/pacientes", icon: Users },
   { name: "Clínicas", href: "/dashboard/clinicas", icon: Building2 },
+  { name: "Veterinários", href: "/dashboard/vets", icon: BriefcaseMedical },
   { name: "Modelos de Texto", href: "/dashboard/templates", icon: FileCode },
   { name: "Financeiross", href: "/dashboard/financeiro", icon: DollarSign },
 ]

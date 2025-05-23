@@ -55,3 +55,12 @@ export const clinicaSchema = z.object({
   // phone: brPhoneSchema,
   whatsapp: brWhatsappSchema,
 })
+
+export const veterinarianSchema = z.object({
+  name: z.string().min(3, "Nome do veterinário obrigatório"),
+  phone: z.string().min(1, "Telefone é obrigatório"),
+  whatsapp: brWhatsappSchema,
+  email: z.string().email("Email inválido"),
+
+  crmNumber: z.string(),
+})
