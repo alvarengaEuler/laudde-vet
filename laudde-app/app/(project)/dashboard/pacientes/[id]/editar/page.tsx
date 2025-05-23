@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, use } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { type Patient, getPatientById } from "@/lib/mock-data"
@@ -31,7 +31,15 @@ const patientFormSchema = z.object({
 
 type PatientFormValues = z.infer<typeof patientFormSchema>
 
-export default function EditarPacientePage({ params }: { params: { id: string } }) {
+
+interface EditParams {
+  id: string;
+}
+
+
+
+export default function EditarPacientePage({ params }: { params: Promise<EditParams> }) {
+  const { id } = use(params); 
   const router = useRouter()
   
   const [patient, setPatient] = useState<Patient | null>(null)
@@ -54,7 +62,7 @@ export default function EditarPacientePage({ params }: { params: { id: string } 
   useEffect(() => {
     // Simulando carregamento de dados
     const timer = setTimeout(() => {
-      const foundPatient = getPatientById(params.id)
+      const foundPatient = getPatientById(id)
       setPatient(foundPatient || null)
 
       if (foundPatient) {
@@ -74,7 +82,7 @@ export default function EditarPacientePage({ params }: { params: { id: string } 
     }, 500)
 
     return () => clearTimeout(timer)
-  }, [params.id, form])
+  }, [id, form])
 
   const onSubmit = (data: PatientFormValues) => {
     console.log("Dados atualizados do paciente:", data)
@@ -82,7 +90,7 @@ export default function EditarPacientePage({ params }: { params: { id: string } 
     //   title: "Paciente atualizado",
     //   description: "As informações do paciente foram atualizadas com sucesso.",
     // })
-    router.push(`/dashboard//pacientes/${params.id}`)
+    router.push(`/dashboard//pacientes/${id}`)
   }
 
   if (loading) {
@@ -136,7 +144,7 @@ export default function EditarPacientePage({ params }: { params: { id: string } 
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center gap-2">
-        <Button variant="outline" size="icon" onClick={() => router.push(`/dashboard/pacientes/${params.id}`)}>
+        <Button variant="outline" size="icon" onClick={() => router.push(`/dashboard/pacientes/${id}`)}>
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <h1 className="text-xl sm:text-2xl font-bold">Editar Paciente</h1>
@@ -278,7 +286,7 @@ export default function EditarPacientePage({ params }: { params: { id: string } 
             />
 
             <div className="flex flex-col sm:flex-row sm:justify-end space-y-2 sm:space-y-0 sm:space-x-3">
-              <Button type="button" variant="outline" onClick={() => router.push(`/dashboard/pacientes/${params.id}`)}>
+              <Button type="button" variant="outline" onClick={() => router.push(`/dashboard/pacientes/${id}`)}>
                 Cancelar
               </Button>
               <Button type="submit">Salvar Alterações</Button>
