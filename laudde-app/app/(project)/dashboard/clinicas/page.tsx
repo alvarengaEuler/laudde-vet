@@ -1,47 +1,29 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { DataTable } from "@/components/ui/data-table"
 
+async function fetchClinics() {
+  const res = await fetch("/api/clinics")
+  if (!res.ok) throw new Error("Erro ao buscar clínicas")
+  return res.json()
+}
+
 export default function ClinicasPage() {
-  const [clinics, setClinics] = useState([])
-  const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  useEffect(() => {
-    async function fetchClinics() {
-      try {
-        const res = await fetch("/api/clinics") // ajuste o endpoint se necessário
-        if (!res.ok) throw new Error("Erro ao buscar clínicas")
-        const data = await res.json()
-        setClinics(data)
-      } catch (error) {
-        console.error("Erro ao buscar clínicas:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchClinics()
-  }, [])
+  const { data: clinics = [], isLoading, error } = useQuery({
+    queryKey: ["clinics"],
+    queryFn: fetchClinics,
+  })
 
   const columns = [
-    {
-      key: "name",
-      header: "Nome",
-    },
-    {
-      key: "cnpj",
-      header: "CNPJ",
-    },
-    {
-      key: "address",
-      header: "Endereço",
-      render: (clinic: any) => <span>{`${clinic.address}, ${clinic.city}/${clinic.state}`}</span>,
-    },
+    { key: "name", header: "Nome" },
+    { key: "whatsapp", header: "Whatsapp" },
+    { key: "email", header: "Email" },
     {
       key: "createdAt",
       header: "Cadastro",
@@ -74,9 +56,11 @@ export default function ClinicasPage() {
         </Link>
       </div>
 
-      <div className="rounded-xl  dark:border-gray-800 ">
-        {loading ? (
+      <div className="rounded-xl dark:border-gray-800">
+        {isLoading ? (
           <p>Carregando...</p>
+        ) : error ? (
+          <p className="text-red-500">Erro ao carregar clínicas</p>
         ) : (
           <DataTable
             data={clinics}

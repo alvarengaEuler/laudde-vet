@@ -8,6 +8,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { Toaster } from "sonner"
 
+import { QueryClientProviders } from "@/lib/providers/query-provider"
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
@@ -31,7 +33,10 @@ export default function RootLayout({
                 <div className="absolute top-4 right-4 z-10">
                   <ThemeToggle />
                 </div>
+                <QueryClientProviders>
                 {children}
+                <ReactQueryDevtools initialIsOpen={false} />
+                </QueryClientProviders>
               </div>
               <Toaster />
               <MobileNavigation />
