@@ -57,7 +57,7 @@ export default function TokenEditorPage() {
             <SheetTitle>Tokens detectados</SheetTitle>
           </SheetHeader>
           <div className="mt-4 space-y-4">
-            {Object.entries(currentTokens).map(([key, value]) => (
+            {Object.entries(currentTokens).map(([key]) => (
               <div key={key}>
                 <label className="text-muted-foreground text-sm">{key}</label>
                 <Input

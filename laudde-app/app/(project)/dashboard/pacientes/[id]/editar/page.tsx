@@ -11,7 +11,7 @@ import { ArrowLeft, Save, Building2 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { use, useEffect } from 'react'
+import { use } from 'react'
 
 // Validação com Zod
 const patientFormSchema = z.object({

@@ -38,7 +38,7 @@ export default function PacientesPage() {
   })
 
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card')
-  const [patientsList, setPatientsList] = useState(patients)
+  // const [patientsList, setPatientsList] = useState(patients)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const columns = [
@@ -117,7 +117,7 @@ export default function PacientesPage() {
 
   const handleDeletePatient = () => {
     if (confirmDelete) {
-      setPatientsList((prev) => prev.filter((patient) => patient.id !== confirmDelete))
+      //setPatientsList((prev) => prev.filter((patient) => patient.id !== confirmDelete))
       // toast({
       //   title: "Paciente excluído",
       //   description: "O paciente foi excluído com sucesso.",
