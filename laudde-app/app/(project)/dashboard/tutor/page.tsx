@@ -5,12 +5,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { DataTable } from '@/components/ui/data-table'
-
-export async function fetchTutors() {
-  const res = await fetch('/api/tutor')
-  if (!res.ok) throw new Error('Erro ao buscar tutores')
-  return res.json()
-}
+import { fetchTutors } from './actions'
 
 export default function TutorsPage() {
   const router = useRouter()
