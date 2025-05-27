@@ -10,8 +10,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 import { PatientOwnerSidesheet } from '../components/patient-owner-sidesheet'
-import { fetchTutors } from '../../tutor/page'
+
 import { QuickTutorSidesheet } from '../components/quick-tutor-sidesheet'
+import { fetchTutors } from '../../tutor/actions'
 
 const patientSchema = z.object({
   name: z.string().min(1, 'Nome do paciente é obrigatório'),
