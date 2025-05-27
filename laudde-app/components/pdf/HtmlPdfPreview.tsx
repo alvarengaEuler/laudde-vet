@@ -22,7 +22,7 @@ export default function HtmlPdfPreview({ titulo, dados }: Props) {
       printWindow.document.write(`
         <html>
           <head>
-            <title>Laudo</title>
+            <title>Laudo ${titulo}</title>
             <style>
               body {
                 font-family: 'Times New Roman', serif;
