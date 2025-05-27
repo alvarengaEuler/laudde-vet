@@ -3,7 +3,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    const vets = await prisma.patientOwner.findMany({})
+    const vets = await prisma.patientOwner.findMany({
+      include: {
+        patients: true,
+      },
+    })
 
     return NextResponse.json(vets)
   } catch (error) {

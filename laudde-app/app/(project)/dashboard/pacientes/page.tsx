@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { Plus, Calendar, Phone, Pencil, Trash2, User } from 'lucide-react'
 import { DataTable } from '@/components/ui/data-table'
-import { patients } from '@/lib/mock-data'
+// import { patients } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -16,10 +16,27 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useQuery } from '@tanstack/react-query'
+
+export async function fetchPatients() {
+  const res = await fetch('/api/patient')
+
+  if (!res.ok) throw new Error('Erro ao buscar pacientes')
+  return res.json()
+}
 
 export default function PacientesPage() {
   const router = useRouter()
-  // const { toast } = useToast()
+
+  const {
+    data: patients = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ['patients'],
+    queryFn: fetchPatients,
+  })
+
   const [viewMode, setViewMode] = useState<'list' | 'card'>('card')
   const [patientsList, setPatientsList] = useState(patients)
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
@@ -143,10 +160,23 @@ export default function PacientesPage() {
         </div>
       </div>
 
+      <div>
+        {isLoading && <p className="text-sm text-gray-500">Carregando pacientes...</p>}
+        {error && (
+          <p className="text-sm text-red-500">Erro ao carregar pacientes: {error.message}</p>
+        )}
+        {patients.length === 0 && !isLoading && (
+          <p className="text-sm text-gray-500">Nenhum paciente encontrado</p>
+        )}
+        {patients.length > 0 && (
+          <p className="text-sm text-gray-500">{patients.length} paciente(s) encontrado(s)</p>
+        )}
+      </div>
+
       {viewMode === 'list' ? (
         <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm sm:p-6 dark:border-gray-800 dark:bg-gray-900 dark:shadow-none">
           <DataTable
-            data={patientsList}
+            data={patients}
             columns={columns}
             searchable={true}
             searchKeys={['name', 'species', 'breed', 'ownerName']}
@@ -155,7 +185,7 @@ export default function PacientesPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {patientsList.map((patient) => (
+          {patients.map((patient) => (
             <Card
               key={patient.id}
               className="cursor-pointer transition-shadow hover:shadow-md dark:border-gray-800"
@@ -183,7 +213,9 @@ export default function PacientesPage() {
                           className="h-8 w-8"
                           onClick={(e) => {
                             e.stopPropagation()
-                            router.push(`/dashboard/pacientes/${patient.id}/editar`)
+                            router.push(
+                              `/dashboard/pacientes/${patient.id}/editar?patientName=${patient.name}&patientBreed=${patient.breed}&patientSpecies=${patient.species}&patientSex=${patient.sex}&patientAge=${patient.age}&patientAgeUnit=${patient.ageUnit}`
+                            )
                           }}
                         >
                           <Pencil className="h-4 w-4" />
@@ -207,7 +239,7 @@ export default function PacientesPage() {
                       <div className="mb-1 flex items-center gap-1">
                         <Calendar size={14} />
                         <span>
-                          {patient.age} {patient.ageUnit === 'years' ? 'anos' : 'meses'}
+                          {patient.age} {patient.ageUnit === 'YEARS' ? 'anos' : 'meses'}
                         </span>
                         <span className="ml-1 rounded-full bg-gray-100 px-1.5 py-0.5 text-xs dark:bg-gray-800">
                           {patient.sex === 'male' ? 'Macho' : 'Fêmea'}
@@ -215,11 +247,11 @@ export default function PacientesPage() {
                       </div>
                       <div className="mb-1 flex items-center gap-1">
                         <User size={14} />
-                        <span>{patient.ownerName}</span>
+                        <span>{patient.patientOwner.name}</span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Phone size={14} />
-                        <span>{patient.ownerPhone}</span>
+                        <span>{patient.patientOwner.phone}</span>
                       </div>
                     </div>
                   </div>

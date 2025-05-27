@@ -20,7 +20,7 @@ const menuItems = [
   { name: 'Dashboard-side', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Agenda', href: '/dashboard/agenda', icon: DollarSign },
   { name: 'Laudos', href: '/dashboard/laudos', icon: FileText },
-  { name: 'Tutor', href: '/dashboard/tutores', icon: Users },
+  { name: 'Tutor', href: '/dashboard/tutor', icon: Users },
   { name: 'Pacientes', href: '/dashboard/pacientes', icon: Dog },
   { name: 'Clínicas', href: '/dashboard/clinicas', icon: Building2 },
   { name: 'Veterinários', href: '/dashboard/vets', icon: BriefcaseMedical },

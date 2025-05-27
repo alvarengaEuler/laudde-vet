@@ -1,7 +1,5 @@
 'use client'
 
-'use client'
-
 import { useSearchParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -9,30 +7,39 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, Save, Building2 } from 'lucide-react'
 
+import { estadosBrasil } from '@/lib/utils/br-states'
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { use, useEffect } from 'react'
+import { use } from 'react'
 
 // Validação com Zod
-const patientFormSchema = z.object({
-  name: z.string().min(1, 'O nome do paciente é obrigatório'),
-  species: z.string().min(1, 'A espécie é obrigatória'),
-  breed: z.string().min(1, 'A raça é obrigatória'),
-  sex: z.enum(['MALE', 'FEMALE'], {
-    required_error: 'O sexo é obrigatório',
-  }),
-  age: z.coerce.number().min(0, 'A idade deve ser maior ou igual a zero'),
-  ageUnit: z.enum(['years', 'months'], {
-    required_error: 'A unidade de idade é obrigatória',
-  }),
+const clinicSchema = z.object({
+  name: z.string().min(1, { message: 'Nome é obrigatório' }),
+  email: z.string().email({ message: 'Email inválido' }),
+  whatsapp: z.string().min(1, { message: 'WhatsApp é obrigatório' }),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().min(1, { message: 'Estado é obrigatório' }),
+  phone: z.string().optional(),
+  cnpj: z.string().optional(),
 })
-type PatientFormData = z.infer<typeof patientFormSchema>
+
+type ClinicFormData = z.infer<typeof clinicSchema>
 
 interface EditParams {
   id: string
 }
 
-export default function EditarPacientePage({ params }: { params: Promise<EditParams> }) {
+export default function EditarClinicaPage({ params }: { params: Promise<EditParams> }) {
   const { id } = use(params)
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -41,21 +48,23 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
     register,
     handleSubmit,
     formState: { errors },
-    // setValue,
-    // watch,
-  } = useForm<PatientFormData>({
-    resolver: zodResolver(patientFormSchema),
+    setValue,
+    watch,
+  } = useForm<ClinicFormData>({
+    resolver: zodResolver(clinicSchema),
     defaultValues: {
-      name: searchParams.get('patientName') || '',
-      species: searchParams.get('patientSpecies') || '',
-      breed: searchParams.get('patientBreed') || '',
-      sex: searchParams.get('patientSex') === 'MALE' ? 'MALE' : 'FEMALE',
-      age: searchParams.get('patientAge') ? parseInt(searchParams.get('age') || '0', 10) : 0,
-      ageUnit: searchParams.get('patientAgeUnit') === 'years' ? 'years' : 'months',
+      name: searchParams.get('name') || '',
+      address: searchParams.get('address') || '',
+      city: searchParams.get('city') || '',
+      state: searchParams.get('state') || '',
+      email: searchParams.get('email') || '',
+      phone: searchParams.get('phone') || '',
+      whatsapp: searchParams.get('whatsapp') || '',
+      cnpj: searchParams.get('cnpj') || '',
     },
   })
 
-  const onSubmit = async (data: PatientFormData) => {
+  const onSubmit = async (data: ClinicFormData) => {
     const response = await fetch('/api/clinics', {
       method: 'PUT',
       headers: {
@@ -71,17 +80,17 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
     }
   }
 
-  // const stateValue = watch('sex')
+  const stateValue = watch('state')
 
   return (
     <div className="space-y-4 sm:space-y-6">
       <div className="flex items-center gap-2">
-        <Link href={`/dashboard/pacientes`}>
+        <Link href={`/dashboard/clinicas/${id}`}>
           <Button variant="outline" size="icon">
             <ArrowLeft className="h-4 w-4" />
           </Button>
         </Link>
-        <h1 className="text-xl font-bold sm:text-2xl">Editar Paciente</h1>
+        <h1 className="text-xl font-bold sm:text-2xl">Editar Clínica</h1>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -89,39 +98,39 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Building2 className="h-5 w-5" />
-              Informações do Paciente
+              Informações da Clínica
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <InputField
-                label="Nome (obrigatório)"
+                label="Clínica (obrigatório)"
                 name="name"
                 error={errors.name?.message}
                 register={register}
               />
               <InputField
-                label="Espécie"
-                name="species"
-                error={errors.species?.message}
+                label="Endereço"
+                name="address"
+                error={errors.address?.message}
                 register={register}
               />
               <InputField
-                label="Raça"
-                name="breed"
-                error={errors.breed?.message}
+                label="Cidade"
+                name="city"
+                error={errors.city?.message}
                 register={register}
               />
 
               {/* Select do Estado */}
-              {/* <div className="space-y-1">
+              <div className="space-y-1">
                 <label
-                  htmlFor="sex"
+                  htmlFor="state"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
                   Estado (obrigatório)
                 </label>
-                <Select value={stateValue} onValueChange={(value) => setValue('sex', value)}>
+                <Select value={stateValue} onValueChange={(value) => setValue('state', value)}>
                   <SelectTrigger className="w-full rounded-md border border-gray-300 px-3 py-2">
                     <SelectValue placeholder="Selecione o estado" />
                   </SelectTrigger>
@@ -134,12 +143,30 @@ export default function EditarPacientePage({ params }: { params: Promise<EditPar
                   </SelectContent>
                 </Select>
                 {errors.state && <p className="text-sm text-red-500">{errors.state.message}</p>}
-              </div> */}
+              </div>
 
               <InputField
-                label="Idade"
-                name="age"
-                error={errors.age?.message}
+                label="Email (obrigatório)"
+                name="email"
+                error={errors.email?.message}
+                register={register}
+              />
+              <InputField
+                label="Telefone"
+                name="phone"
+                error={errors.phone?.message}
+                register={register}
+              />
+              <InputField
+                label="WhatsApp (obrigatório)"
+                name="whatsapp"
+                error={errors.whatsapp?.message}
+                register={register}
+              />
+              <InputField
+                label="CNPJ"
+                name="cnpj"
+                error={errors.cnpj?.message}
                 register={register}
               />
             </div>

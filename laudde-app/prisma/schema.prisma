@@ -131,7 +131,7 @@ model Patient {
   species     String?
   breed       String?
   sex         Sex?
-  age         Int?
+  age         String?
   ageUnit     AgeUnit?
   ownerName   String?
   ownerPhone  String?
