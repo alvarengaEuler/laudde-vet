@@ -1,13 +1,13 @@
 'use client'
+
 import Link from 'next/link'
 import { useState } from 'react'
 import { Plus, Calendar, Phone, Pencil, Trash2, User } from 'lucide-react'
 import { DataTable } from '@/components/ui/data-table'
-// import { patients } from '@/lib/mock-data'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-// import { useToast } from "@/hooks/use-toast"
+
 import {
   Dialog,
   DialogContent,
@@ -17,13 +17,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useQuery } from '@tanstack/react-query'
-
-export async function fetchPatients() {
-  const res = await fetch('/api/patient')
-
-  if (!res.ok) throw new Error('Erro ao buscar pacientes')
-  return res.json()
-}
+import { fetchPatients } from './actions'
 
 export default function PacientesPage() {
   const router = useRouter()
