@@ -211,7 +211,6 @@ model Report {
   categoryXRay       XRayCategory?
   findings        String
   conclusion      String
-  createdAt       DateTime   @default(now())
   status          ReportStatus
   baseValue       Float
   additionalValue Float
@@ -222,6 +221,9 @@ model Report {
   patient         Patient    @relation(fields: [patientId], references: [id])
   clinic          Clinic     @relation(fields: [clinicId], references: [id])
   transactions    FinancialTransaction[]
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @default(now())
 
   Veterinarian Veterinarian[]
 }

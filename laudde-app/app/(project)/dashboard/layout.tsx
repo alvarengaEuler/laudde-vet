@@ -2,7 +2,7 @@ import type React from 'react'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
-import Sidebar from '@/components/sidebar'
+import Sidebar from '@/components/sidebar/sidebar'
 import MobileNavigation from '@/components/mobile-navigation'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ThemeToggle } from '@/components/theme-toggle'
