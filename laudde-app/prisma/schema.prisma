@@ -6,11 +6,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-
 
 enum UserRole {
   admin
@@ -85,147 +84,142 @@ enum TransactionStatus {
 }
 
 model User {
-  id    String   @id @default(uuid())
-  name  String
-  email String   @unique
-  password String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  id        String       @id @default(uuid())
+  name      String
+  email     String       @unique
+  password  String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
   profile   UserProfile?
-  role  UserRole
+  role      UserRole
 
-  patient Patient[]
+  patient      Patient[]
   veterinarian Veterinarian[]
-  clinic Clinic[]
+  clinic       Clinic[]
 
   PatientOwner PatientOwner[]
 }
 
 model UserProfile {
-  id        String   @id @default(uuid())
-  userId    String   @unique
-  name      String
-  cnpj String?   @unique
-  CRMV String?   @unique
-  phone String?
-  instagramHandle String?
-  instagramURL String?
-  twitterHandle String?
-  twitterURL String?
-  websiteHandle String?
-  websiteURL String?
-  address   String?
-  city      String?
-  state     String?
-  profilePictureURL String?
-  logoPictureURL String?
+  id                  String   @id @default(uuid())
+  userId              String   @unique
+  name                String
+  cnpj                String?  @unique
+  CRMV                String?  @unique
+  phone               String?
+  instagramHandle     String?
+  instagramURL        String?
+  twitterHandle       String?
+  twitterURL          String?
+  websiteHandle       String?
+  websiteURL          String?
+  address             String?
+  city                String?
+  state               String?
+  profilePictureURL   String?
+  logoPictureURL      String?
   signaturePictureURL String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-  user      User     @relation(fields: [userId], references: [id])
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  user                User     @relation(fields: [userId], references: [id])
 }
 
 model Patient {
-  id          String   @id @default(uuid())
-  name        String
-  species     String?
-  breed       String?
-  sex         Sex?
-  age         String?
-  ageUnit     AgeUnit?
-  ownerName   String?
-  ownerPhone  String?
-  weight      String?
-  weightUnit  String?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(uuid())
+  name       String
+  species    String?
+  breed      String?
+  sex        Sex?
+  age        String?
+  ageUnit    AgeUnit?
+  ownerName  String?
+  ownerPhone String?
+  weight     String?
+  weightUnit String?
+  createdAt  DateTime @default(now())
 
-  userId        String
-  user          User?           @relation(fields: [userId], references: [id])
+  userId String
+  user   User?  @relation(fields: [userId], references: [id])
 
   patientOwnerId String
-  patientOwner   PatientOwner   @relation(fields: [patientOwnerId], references: [id])
+  patientOwner   PatientOwner @relation(fields: [patientOwnerId], references: [id])
 
-  reports     Report[]
-  Payment     Payment[]
+  reports               Report[]
+  Payment               Payment[]
   financialTransactions FinancialTransaction[]
 }
-
 
 model PatientOwner {
   id        String   @id @default(uuid())
   name      String
   phone     String
-  email     String?   @unique
+  email     String?  @unique
   address   String?
   city      String?
   state     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 
-  patients  Patient[]
+  patients Patient[]
 }
 
 model Veterinarian {
-  id        String   @id @default(uuid())
-  name      String
-  phone     String
-  whatsapp  String
-  email     String?   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
- 
-  crmNumber String? @unique
+  id       String  @id @default(uuid())
+  name     String
+  phone    String
+  whatsapp String
+  email    String? @unique
+  userId   String
+  user     User    @relation(fields: [userId], references: [id])
+
+  crmNumber String?  @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   reports   Report[]
 }
 
 model Clinic {
-  id        String   @id @default(uuid())
-  name      String
-  cnpj      String?   @unique
-  address   String?
-  city      String?
-  state     String?
-  phone     String
+  id           String                 @id @default(uuid())
+  name         String
+  cnpj         String?                @unique
+  address      String?
+  city         String?
+  state        String?
+  phone        String
   whatsapp     String
-  email     String   @unique
-  createdAt DateTime @default(now())
-  reports   Report[]
-  payments  Payment[]
+  email        String                 @unique
+  createdAt    DateTime               @default(now())
+  reports      Report[]
+  payments     Payment[]
   transactions FinancialTransaction[]
-  userId String
-  user   User?    @relation(fields: [userId], references: [id])
+  userId       String
+  user         User?                  @relation(fields: [userId], references: [id])
 }
 
 model Report {
-  id              String     @id @default(uuid())
+  id              String                 @id @default(uuid())
   patientId       String
   clinicId        String
   userId          String
   type            ExamType
-  categoryUltrasound UltrasoundCategory?
-  categoryXRay       XRayCategory?
-  findings        String
-  conclusion      String
   status          ReportStatus
   baseValue       Float
   additionalValue Float
-  code            String     @unique
-  images          ReportImage[]   // Lista de URLs ou paths
-  measurements    Measurement[]
+  images          ReportImage[] // Lista de URLs ou paths
+  content         Json
   payment         Payment?
-  patient         Patient    @relation(fields: [patientId], references: [id])
-  clinic          Clinic     @relation(fields: [clinicId], references: [id])
+  patient         Patient                @relation(fields: [patientId], references: [id])
+  clinic          Clinic                 @relation(fields: [clinicId], references: [id])
   transactions    FinancialTransaction[]
 
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
   Veterinarian Veterinarian[]
+  Measurement  Measurement[]
 }
 
 model ReportImage {
@@ -237,47 +231,47 @@ model ReportImage {
 }
 
 model Measurement {
-  id       String  @id @default(uuid())
+  id       String @id @default(uuid())
   organ    String
   value    String
-  report   Report  @relation(fields: [reportId], references: [id])
+  report   Report @relation(fields: [reportId], references: [id])
   reportId String
 }
 
 model TextTemplate {
-  id        String   @id @default(uuid())
-  title     String
+  id                 String              @id @default(uuid())
+  title              String
   categoryUltrasound UltrasoundCategory?
   categoryXRay       XRayCategory?
-  content   String
-  createdAt DateTime @default(now())
+  content            String
+  createdAt          DateTime            @default(now())
 }
 
 model ConclusionTemplate {
-  id        String   @id @default(uuid())
-  title     String
+  id                 String              @id @default(uuid())
+  title              String
   categoryUltrasound UltrasoundCategory?
   categoryXRay       XRayCategory?
-  content   String
-  createdAt DateTime @default(now())
+  content            String
+  createdAt          DateTime            @default(now())
 }
 
 model Payment {
-  id         String       @id @default(uuid())
-  reportId   String       @unique
-  amount     Float
-  method     PaymentMethod
-  source     PaymentSource
-  sourceId   String
-  date       DateTime
-  status     TransactionStatus
-  report     Report       @relation(fields: [reportId], references: [id])
-  clinic     Clinic?      @relation(fields: [sourceId], references: [id], map: "Payment_clinic_sourceId_fkey")
-  patient    Patient?     @relation(fields: [sourceId], references: [id], map: "Payment_patient_sourceId_fkey")
+  id       String            @id @default(uuid())
+  reportId String            @unique
+  amount   Float
+  method   PaymentMethod
+  source   PaymentSource
+  sourceId String
+  date     DateTime
+  status   TransactionStatus
+  report   Report            @relation(fields: [reportId], references: [id])
+  clinic   Clinic?           @relation(fields: [sourceId], references: [id], map: "Payment_clinic_sourceId_fkey")
+  patient  Patient?          @relation(fields: [sourceId], references: [id], map: "Payment_patient_sourceId_fkey")
 }
 
 model FinancialTransaction {
-  id               String             @id @default(uuid())
+  id               String            @id @default(uuid())
   type             TransactionType
   category         String
   description      String
@@ -288,8 +282,7 @@ model FinancialTransaction {
   relatedPatientId String?
   paymentMethod    String?
   status           TransactionStatus
-  report           Report?            @relation(fields: [relatedReportId], references: [id])
-  clinic           Clinic?            @relation(fields: [relatedClinicId], references: [id])
-  patient          Patient?           @relation(fields: [relatedPatientId], references: [id])
+  report           Report?           @relation(fields: [relatedReportId], references: [id])
+  clinic           Clinic?           @relation(fields: [relatedClinicId], references: [id])
+  patient          Patient?          @relation(fields: [relatedPatientId], references: [id])
 }
-
