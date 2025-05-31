@@ -14,7 +14,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`hidden h-screen flex-col border-r bg-zinc-50 transition-all duration-300 lg:flex dark:bg-zinc-900/80 ${
+      className={`hidden h-screen flex-col border-r bg-gradient-to-br from-blue-50 to-indigo-50 transition-all duration-300 lg:flex dark:bg-zinc-900/80 ${
         isCollapsed ? 'w-20' : 'w-64'
       }`}
     >
@@ -42,8 +42,8 @@ const Sidebar = () => {
                   href={item.href}
                   className={`group relative flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
                     isActive
-                      ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400'
-                      : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                      ? 'bg-blue-50 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400'
+                      : 'text-blue-950 hover:bg-indigo-100 dark:text-gray-300 dark:hover:bg-gray-800'
                   }`}
                 >
                   <Icon size={18} className={isActive ? 'text-blue-600 dark:text-blue-400' : ''} />

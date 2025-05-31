@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard,
   FileText,
@@ -15,18 +15,8 @@ import {
   X,
   Calculator,
   User,
-} from "lucide-react"
-
-const menuItems = [
-  { name: "Dashboard mobile", href: "/", icon: LayoutDashboard },
-  { name: "Laudos", href: "/laudos", icon: FileText },
-  { name: "Pacientes", href: "/pacientes", icon: Users },
-  { name: "Clínicas", href: "/clinicas", icon: Building2 },
-  { name: "Modelos de Texto", href: "/templates", icon: FileCode },
-  { name: "Financeiro", href: "/financeiro", icon: DollarSign },
-  { name: "Tickets de Exames", href: "/financeiro/tickets", icon: Calculator },
-  { name: "Perfil", href: "/perfil", icon: User },
-]
+} from 'lucide-react'
+import { menuItems } from './sidebar/menu-itens'
 
 const MobileNavigation = () => {
   const pathname = usePathname()
@@ -43,10 +33,10 @@ const MobileNavigation = () => {
     checkIfMobile()
 
     // Adicionar listener para redimensionamento
-    window.addEventListener("resize", checkIfMobile)
+    window.addEventListener('resize', checkIfMobile)
 
     // Limpar listener
-    return () => window.removeEventListener("resize", checkIfMobile)
+    return () => window.removeEventListener('resize', checkIfMobile)
   }, [])
 
   // Fechar o menu quando um link for clicado em dispositivos móveis
@@ -59,12 +49,12 @@ const MobileNavigation = () => {
   return (
     <>
       {/* Header fixo para mobile */}
-      <header className="border border-orange-500 fixed top-0 left-0 right-0 h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 z-30 lg:hidden">
+      <header className="fixed left-0 right-0 top-0 z-30 flex h-16 items-center justify-between border border-b border-gray-200 border-orange-500 bg-white px-4 lg:hidden">
         <div className="flex items-center">
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded-md text-gray-500 hover:bg-gray-100"
-            aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+            className="rounded-md p-2 text-gray-500 hover:bg-gray-100"
+            aria-label={isOpen ? 'Fechar menu' : 'Abrir menu'}
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -74,16 +64,19 @@ const MobileNavigation = () => {
 
       {/* Overlay para quando o menu mobile estiver aberto */}
       {isOpen && (
-        <div className="fixed inset-0 bg-black opacity-70 z-40 lg:hidden" onClick={() => setIsOpen(false)} />
+        <div
+          className="fixed inset-0 z-40 bg-black opacity-70 lg:hidden"
+          onClick={() => setIsOpen(false)}
+        />
       )}
 
       {/* Menu lateral - visível em desktop ou quando aberto em mobile */}
       <aside
-        className={`lg:hidden fixed top-0 left-0 h-full w-72 bg-white border-r border-gray-200 z-50 transition-transform duration-300 ease-in-out transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        className={`fixed left-0 top-0 z-50 h-full w-72 transform border-r border-gray-200 bg-white transition-transform duration-300 ease-in-out lg:hidden ${
+          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
-        <div className="p-6 border-b border-gray-200">
+        <div className="border-b border-gray-200 p-6">
           <h1 className="text-xl font-bold text-blue-600">Laudde</h1>
           <p className="text-sm text-gray-500">Sistema de Laudos</p>
         </div>
@@ -99,8 +92,8 @@ const MobileNavigation = () => {
                   <Link
                     href={item.href}
                     onClick={handleLinkClick}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-                      isActive ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-100"
+                    className={`flex items-center gap-3 rounded-lg px-4 py-3 transition-colors ${
+                      isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
                     <Icon size={18} />
@@ -112,8 +105,8 @@ const MobileNavigation = () => {
           </ul>
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
-          <div className="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg cursor-pointer">
+        <div className="absolute bottom-0 left-0 right-0 border-t border-gray-200 p-4">
+          <div className="flex cursor-pointer items-center gap-3 rounded-lg px-4 py-3 text-gray-600 hover:bg-gray-100">
             <LogOut size={18} />
             <span>Sair</span>
           </div>
@@ -121,7 +114,7 @@ const MobileNavigation = () => {
       </aside>
 
       {/* Barra de navegação inferior para mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-30 lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-200 bg-white lg:hidden">
         <div className="flex justify-around">
           {menuItems.slice(0, 5).map((item) => {
             const isActive = pathname === item.href
@@ -131,10 +124,10 @@ const MobileNavigation = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex flex-col items-center py-2 px-3 ${isActive ? "text-blue-600" : "text-gray-600"}`}
+                className={`flex flex-col items-center px-3 py-2 ${isActive ? 'text-blue-600' : 'text-gray-600'}`}
               >
                 <Icon size={20} />
-                <span className="text-xs mt-1">{item.name}</span>
+                <span className="mt-1 text-xs">{item.name}</span>
               </Link>
             )
           })}

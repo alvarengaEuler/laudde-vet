@@ -14,7 +14,7 @@ import {
 export const menuItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Laudos', href: '/dashboard/laudos', icon: FileText },
-  { name: 'Modelos de Texto', href: '/dashboard/models', icon: FileCode },
+  { name: 'Modelos de Texto', href: '/dashboard/modelos', icon: FileCode },
   { name: 'Tutor', href: '/dashboard/tutor', icon: Users },
   { name: 'Pacientes', href: '/dashboard/pacientes', icon: Dog },
   { name: 'Clínicas', href: '/dashboard/clinicas', icon: Building2 },

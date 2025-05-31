@@ -80,7 +80,7 @@ export default function Dashboard() {
           <p className="text-sm text-gray-500">Visão geral do seu sistema de laudos</p>
         </div>
 
-        <div className="flex flex-col space-y-2 rounded-lg border border-gray-200 bg-white p-3 shadow-sm sm:flex-row sm:space-x-4 sm:space-y-0">
+        <div className="flex flex-col space-y-2 rounded-lg border border-red-500 p-3 shadow-sm sm:flex-row sm:space-x-4 sm:space-y-0">
           <div className="flex items-center">
             <Calendar size={18} className="mr-2 text-gray-500" />
             <input
