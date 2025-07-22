@@ -1,29 +1,59 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Calendar, FileText, Grid3X3, List } from 'lucide-react'
-import { useModelStore } from '@/lib/store'
+import { useModelStore } from '@/lib/stores/model-store'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { useState } from 'react'
+
 import { ModelListView } from '@/components/modelos/editor/model-list-view'
+import ActionMenu from '@/components/modelos/editor/action-menu'
 
 export default function ModelsListPage() {
-  const { models, createModel } = useModelStore()
+  const { models, createModel, fetchModels } = useModelStore()
   const router = useRouter()
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
 
+  useEffect(() => {
+    fetchModels()
+  }, [])
+
   const handleCreateModel = () => {
-    const newModel = createModel()
-    router.push(`/dashboard/modelos/editor/${newModel.id}`)
+    console.log('handleCreateModel')
+    const response = fetch('/api/models', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: 'Novo Modelo Ultrassom', ExamType: 'ULTRASOUND', fields: [] }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        createModel({
+          id: data.id,
+          name: data.title,
+          fields: [],
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+        })
+        router.push(`/dashboard/modelos/editor/${data.id}`)
+      })
+      .catch((error) => {
+        console.error('Error creating model:', error)
+        alert('Erro ao criar modelo. Tente novamente.')
+      })
+    return response
   }
 
   const handleEditModel = (id: string) => {
     router.push(`/dashboard/modelos/editor/${id}`)
   }
+
+  const handleDeleteModel = (id: string) => {}
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50">
@@ -89,11 +119,22 @@ export default function ModelsListPage() {
                 onClick={() => handleEditModel(model.id)}
               >
                 <CardHeader>
-                  <CardTitle className="text-lg text-blue-900">{model.name}</CardTitle>
-                  <CardDescription className="flex items-center text-blue-600">
-                    <Calendar className="mr-1 h-4 w-4" />
-                    {format(model.createdAt, "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
-                  </CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg text-blue-900">{model.name}</CardTitle>
+                      <CardDescription className="flex items-center text-blue-600">
+                        <Calendar className="mr-1 h-4 w-4" />
+                        {format(new Date(model.createdAt), "dd 'de' MMMM 'de' yyyy", {
+                          locale: ptBR,
+                        })}
+                      </CardDescription>
+                    </div>
+                    {/* <EllipsisVertical className="h-5 w-5 text-blue-500 hover:text-blue-700" /> */}
+                    <ActionMenu
+                      onEdit={() => handleEditModel(model.id)}
+                      onDelete={() => handleDeleteModel(model.id)}
+                    />
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
