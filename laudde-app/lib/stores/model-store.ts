@@ -7,6 +7,7 @@ import { mockModels } from '@/lib/mocks/mock-data'
 
 interface ModelStore {
   models: Model[]
+  fetchModels: () => Promise<void>
   createModel: (model: Model) => Model
   updateModel: (id: string, updates: Partial<Model>) => void
   deleteModel: (id: string) => void
@@ -21,6 +22,32 @@ interface ModelStore {
 
 export const useModelStore = create<ModelStore>()((set, get) => ({
   models: mockModels,
+
+  fetchModels: async () => {
+    try {
+      const res = await fetch('/api/models')
+      const data = await res.json()
+
+      const normalized = data.map((model: any) => ({
+        id: model.id,
+        name: model.title,
+        createdAt: model.createdAt,
+        updatedAt: model.updatedAt,
+        fields: Array.isArray(model.fields)
+          ? model.fields
+          : Object.entries(model.fields || {}).map(([key, value]) => ({
+              id: key,
+              name: value,
+              type: 'textarea', // default/fallback
+              required: false,
+            })),
+      }))
+
+      set({ models: normalized })
+    } catch (error) {
+      console.error('Erro ao buscar modelos:', error)
+    }
+  },
 
   createModel: (model) => {
     const newModel: Model = {
