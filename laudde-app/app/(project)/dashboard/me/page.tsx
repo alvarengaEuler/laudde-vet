@@ -1,27 +1,38 @@
-"use client"
+'use client'
 
-import type React from "react"
+import type React from 'react'
 
-import { useState } from "react"
-import { User, Phone, Mail, Key, Building, FileCheck, Wallet, Upload, Save, Camera } from "lucide-react"
+import { useState } from 'react'
+import {
+  User,
+  Phone,
+  Mail,
+  Key,
+  Building,
+  FileCheck,
+  Wallet,
+  Upload,
+  Save,
+  Camera,
+} from 'lucide-react'
 // import { useToast } from "@/hooks/use-toast"
 
 export default function ProfilePage() {
-//   const { toast } = useToast()
+  //   const { toast } = useToast()
   const [isEditing, setIsEditing] = useState(false)
-  const [avatar, setAvatar] = useState<string | null>("/placeholder.svg?height=200&width=200")
+  const [avatar, setAvatar] = useState<string | null>('/placeholder.svg?height=200&width=200')
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
   const [signature, setSignature] = useState<string | null>(null)
 
   const [profileData, setProfileData] = useState({
-    name: "Dra. Ana Silva",
-    phone: "(11) 98765-4321",
-    email: "ana.silva@exemplo.com",
-    password: "••••••••",
-    cnpj: "12.345.678/0001-90",
-    crm: "CRMV-SP 12345",
-    pixKey: "ana.silva@exemplo.com",
-    specialties: ["Ultrassonografia", "Radiologia"],
+    name: 'Dra. Ana Silva',
+    phone: '(11) 98765-4321',
+    email: 'ana.silva@exemplo.com',
+    password: '••••••••',
+    cnpj: '12.345.678/0001-90',
+    crm: 'CRMV-SP 12345',
+    pixKey: 'ana.silva@exemplo.com',
+    specialties: ['Ultrassonografia', 'Radiologia'],
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,26 +97,28 @@ export default function ProfilePage() {
         <p className="text-sm text-gray-500">Gerencie suas informações pessoais e profissionais</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Coluna da esquerda - Informações básicas */}
         <div className="md:col-span-2">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <div className="flex justify-between items-center mb-6">
+          <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+            <div className="mb-6 flex items-center justify-between">
               <h2 className="text-lg font-medium">Informações Pessoais</h2>
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="text-blue-600 text-sm font-medium hover:text-blue-800"
+                className="text-sm font-medium text-blue-600 hover:text-blue-800"
               >
-                {isEditing ? "Cancelar" : "Editar"}
+                {isEditing ? 'Cancelar' : 'Editar'}
               </button>
             </div>
 
             <div className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Nome Completo
+                  </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                       <User size={18} />
                     </div>
                     <input
@@ -114,17 +127,17 @@ export default function ProfilePage() {
                       value={profileData.name}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                        isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                      className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                        isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                       }`}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Telefone</label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                       <Phone size={18} />
                     </div>
                     <input
@@ -133,19 +146,19 @@ export default function ProfilePage() {
                       value={profileData.phone}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                        isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                      className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                        isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                       }`}
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Email</label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                       <Mail size={18} />
                     </div>
                     <input
@@ -154,17 +167,17 @@ export default function ProfilePage() {
                       value={profileData.email}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                        isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                      className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                        isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                       }`}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Senha</label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                       <Key size={18} />
                     </div>
                     <input
@@ -173,8 +186,8 @@ export default function ProfilePage() {
                       value={profileData.password}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                        isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                      className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                        isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                       }`}
                     />
                   </div>
@@ -182,15 +195,15 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-100">
-              <h2 className="text-lg font-medium mb-6">Informações Profissionais</h2>
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              <h2 className="mb-6 text-lg font-medium">Informações Profissionais</h2>
 
               <div className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
+                    <label className="mb-1 block text-sm font-medium text-gray-700">CNPJ</label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                         <Building size={18} />
                       </div>
                       <input
@@ -199,17 +212,17 @@ export default function ProfilePage() {
                         value={profileData.cnpj}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                          isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                        className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                          isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                         }`}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">CRMV</label>
+                    <label className="mb-1 block text-sm font-medium text-gray-700">CRMV</label>
                     <div className="relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                         <FileCheck size={18} />
                       </div>
                       <input
@@ -218,8 +231,8 @@ export default function ProfilePage() {
                         value={profileData.crm}
                         onChange={handleInputChange}
                         disabled={!isEditing}
-                        className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                          isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                        className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                          isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                         }`}
                       />
                     </div>
@@ -227,9 +240,9 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Chave PIX</label>
+                  <label className="mb-1 block text-sm font-medium text-gray-700">Chave PIX</label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
                       <Wallet size={18} />
                     </div>
                     <input
@@ -238,20 +251,22 @@ export default function ProfilePage() {
                       value={profileData.pixKey}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full pl-10 pr-4 py-2 border rounded-lg ${
-                        isEditing ? "bg-white border-gray-300" : "bg-gray-50 border-gray-200"
+                      className={`w-full rounded-lg border py-2 pl-10 pr-4 ${
+                        isEditing ? 'border-gray-300 bg-white' : 'border-gray-200 bg-gray-50'
                       }`}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Especialidades</label>
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Especialidades
+                  </label>
+                  <div className="mt-2 flex flex-wrap gap-2">
                     {profileData.specialties.map((specialty, index) => (
                       <span
                         key={index}
-                        className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm flex items-center"
+                        className="flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm text-blue-800"
                       >
                         {specialty}
                         {isEditing && (
@@ -270,9 +285,9 @@ export default function ProfilePage() {
                     ))}
                     {isEditing && (
                       <button
-                        className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm border border-gray-300 hover:bg-gray-200"
+                        className="rounded-full border border-gray-300 bg-gray-100 px-3 py-1 text-sm text-gray-800 hover:bg-gray-200"
                         onClick={() => {
-                          const specialty = prompt("Digite uma nova especialidade:")
+                          const specialty = prompt('Digite uma nova especialidade:')
                           if (specialty && !profileData.specialties.includes(specialty)) {
                             setProfileData({
                               ...profileData,
@@ -293,7 +308,7 @@ export default function ProfilePage() {
               <div className="mt-6 flex justify-end">
                 <button
                   onClick={handleSaveProfile}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
+                  className="flex items-center rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
                 >
                   <Save size={18} className="mr-2" />
                   Salvar Alterações
@@ -305,14 +320,18 @@ export default function ProfilePage() {
 
         {/* Coluna da direita - Foto e Assinatura */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-medium mb-4">Foto de Perfil</h2>
+          <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-lg font-medium">Foto de Perfil</h2>
             <div className="flex flex-col items-center">
-              <div className="w-40 h-40 rounded-full overflow-hidden bg-gray-100 mb-4">
+              <div className="mb-4 h-40 w-40 overflow-hidden rounded-full bg-gray-100">
                 {avatar ? (
-                  <img src={avatar || "/placeholder.svg"} alt="Perfil" className="w-full h-full object-cover" />
+                  <img
+                    src={avatar || '/placeholder.svg'}
+                    alt="Perfil"
+                    className="h-full w-full object-cover"
+                  />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                  <div className="flex h-full w-full items-center justify-center bg-gray-200 text-gray-400">
                     <User size={64} />
                   </div>
                 )}
@@ -321,7 +340,7 @@ export default function ProfilePage() {
                 <div className="mt-2">
                   <label
                     htmlFor="avatar-upload"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer flex items-center"
+                    className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
                   >
                     <Camera size={18} className="mr-2" />
                     Alterar foto
@@ -338,18 +357,18 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-medium mb-4">Logo</h2>
+          <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-lg font-medium">Logo</h2>
             <div className="flex flex-col items-center">
-              <div className="w-full h-40 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="flex h-40 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100">
                 {logoPreview ? (
                   <img
-                    src={logoPreview || "/placeholder.svg"}
+                    src={logoPreview || '/placeholder.svg'}
                     alt="Logo"
-                    className="max-w-full max-h-full object-contain"
+                    className="max-h-full max-w-full object-contain"
                   />
                 ) : (
-                  <div className="text-gray-400 flex flex-col items-center">
+                  <div className="flex flex-col items-center text-gray-400">
                     <Building size={48} />
                     <span className="mt-2 text-sm">Nenhuma logo</span>
                   </div>
@@ -359,29 +378,35 @@ export default function ProfilePage() {
                 <div className="mt-4">
                   <label
                     htmlFor="logo-upload"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer flex items-center"
+                    className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
                   >
                     <Upload size={18} className="mr-2" />
                     Fazer upload da logo
                   </label>
-                  <input id="logo-upload" type="file" accept="image/*" onChange={handleLogoChange} className="hidden" />
+                  <input
+                    id="logo-upload"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
                 </div>
               )}
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-medium mb-4">Assinatura Digital</h2>
+          <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm">
+            <h2 className="mb-4 text-lg font-medium">Assinatura Digital</h2>
             <div className="flex flex-col items-center">
-              <div className="w-full h-28 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+              <div className="flex h-28 w-full items-center justify-center overflow-hidden rounded-lg bg-gray-100">
                 {signature ? (
                   <img
-                    src={signature || "/placeholder.svg"}
+                    src={signature || '/placeholder.svg'}
                     alt="Assinatura"
-                    className="max-w-full max-h-full object-contain"
+                    className="max-h-full max-w-full object-contain"
                   />
                 ) : (
-                  <div className="text-gray-400 flex flex-col items-center">
+                  <div className="flex flex-col items-center text-gray-400">
                     <FileCheck size={36} />
                     <span className="mt-2 text-sm">Nenhuma assinatura</span>
                   </div>
@@ -391,7 +416,7 @@ export default function ProfilePage() {
                 <div className="mt-4">
                   <label
                     htmlFor="signature-upload"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer flex items-center"
+                    className="flex cursor-pointer items-center rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
                   >
                     <Upload size={18} className="mr-2" />
                     Fazer upload da assinatura
