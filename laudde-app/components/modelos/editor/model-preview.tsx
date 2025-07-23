@@ -7,6 +7,8 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { FormattedTextPreview } from './formatted-text-preview'
 import { useTemplateVariables } from '@/lib/stores/template-variables-store'
+import Image from 'next/image'
+import { ImageIcon } from 'lucide-react'
 
 interface ModelPreviewProps {
   model: Model
@@ -62,10 +64,7 @@ export function ModelPreview({
                     <thead>
                       <tr className="bg-gray-50">
                         {tableData.headers.map((header: string, index: number) => (
-                          <th
-                            key={index}
-                            className="border border-gray-200 p-2 text-left font-medium"
-                          >
+                          <th key={index} className="border border-gray-200 p-2 text-left font-medium">
                             {header}
                           </th>
                         ))}
@@ -96,6 +95,51 @@ export function ModelPreview({
             </div>
           )
 
+        case 'image':
+          let imageData
+          try {
+            imageData = field.tableContent ? JSON.parse(field.tableContent) : null
+          } catch {
+            imageData = null
+          }
+
+          if (imageData?.columns && Array.isArray(imageData.columns)) {
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {imageData.columns.map((col: any, index: number) => (
+                  <div
+                    key={index}
+                    className="rounded border border-gray-200 bg-white p-2 space-y-2 text-center"
+                  >
+                    <p className="text-xs font-medium text-gray-700">{col.label || `Imagem ${index + 1}`}</p>
+                    {col.imageBase64 ? (
+                      <Image
+                        src={col.imageBase64}
+                        alt={col.label || `Imagem ${index + 1}`}
+                        width={400}
+                        height={300}
+                        unoptimized
+                        className="rounded border border-gray-300 object-contain max-h-64 w-full"
+                      />
+                    ) : (
+                      <div className="flex h-40 items-center justify-center rounded border border-dashed border-gray-300 bg-gray-50 text-gray-400">
+                        <ImageIcon className="h-8 w-8" />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )
+          }
+
+          return (
+            <div className="space-y-2">
+              <div className="rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600">
+                Nenhuma imagem configurada
+              </div>
+            </div>
+          )
+
         default:
           return (
             <div className="rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600">
@@ -119,7 +163,7 @@ export function ModelPreview({
 
     return model.fields.map((field) => (
       <div key={field.id} className="space-y-2">
-        <div className="">
+        <div>
           <div className="flex items-center gap-2">
             <label className="text-sm font-semibold uppercase tracking-wide text-gray-900">
               {field.name}
