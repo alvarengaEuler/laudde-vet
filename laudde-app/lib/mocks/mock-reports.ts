@@ -188,6 +188,7 @@ export const mockReports: Report[] = [
         description: 'Medições da pressão intraocular',
         tableContent:
           '{"headers": ["Olho", "Pressão (mmHg)", "Observações"], "rows": [["Direito", "18", "Normal"], ["Esquerdo", "19", "Normal"]]}',
+        content: '',
       },
     ],
     images: [

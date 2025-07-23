@@ -5,6 +5,7 @@ import { ArrowLeft, Eye, EyeOff, Plus, FileJson, Pencil, Save } from 'lucide-rea
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ModelPreview } from './model-preview'
+import { Model } from '@/lib/mocks/types'
 
 type ToolBarProps = {
   handleNameChange: (name: string) => void
@@ -16,7 +17,7 @@ type ToolBarProps = {
   lastSaved: Date | null
   saving: boolean
   modelId: string
-  model: { name: string } // Substituir com tipo mais preciso se necessário
+  model: Model
   setShowJsonViewer: (show: boolean) => void
   backButton?: () => void
 }

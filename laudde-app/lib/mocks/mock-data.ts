@@ -4,8 +4,8 @@ export const mockModels: Model[] = [
   {
     id: '1',
     name: 'Exame Gestacional Bovino',
-    createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15'),
+    createdAt: new Date('2024-01-15').toISOString(),
+    updatedAt: new Date('2024-01-15').toISOString(),
     fields: [
       {
         id: '1-1',
@@ -36,8 +36,8 @@ export const mockModels: Model[] = [
   {
     id: '2',
     name: 'Exame Oftalmológico',
-    createdAt: new Date('2024-01-10'),
-    updatedAt: new Date('2024-01-12'),
+    createdAt: new Date('2024-01-10').toISOString(),
+    updatedAt: new Date('2024-01-12').toISOString(),
     fields: [
       {
         id: '2-1',

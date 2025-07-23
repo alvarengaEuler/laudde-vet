@@ -40,7 +40,7 @@ import {
 
 export default function LaudosPage() {
   const router = useRouter()
-  const { reports, models, createReportFromModel, deleteReport } = useModelStore()
+  const { reports, models, deleteReport } = useModelStore()
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | 'draft' | 'published'>('all')
   const [sortBy, setSortBy] = useState<'date' | 'name' | 'status'>('date')
@@ -69,10 +69,10 @@ export default function LaudosPage() {
       return sortOrder === 'asc' ? comparison : -comparison
     })
 
-  const handleCreateReport = (modelId: string) => {
-    const newReport = createReportFromModel(modelId)
-    router.push(`/laudos/${newReport.id}`)
-  }
+  // const handleCreateReport = (modelId: string) => {
+  //   const newReport (modelId)
+  //   router.push(`/laudos/${newReport.id}`)
+  // }
 
   const handleDeleteReport = (id: string) => {
     if (window.confirm('Tem certeza que deseja excluir este laudo?')) {
@@ -109,7 +109,7 @@ export default function LaudosPage() {
                   <Card
                     key={model.id}
                     className="cursor-pointer border-blue-200 transition-all hover:shadow-md"
-                    onClick={() => handleCreateReport(model.id)}
+                    onClick={() => {}}
                   >
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base text-blue-900">{model.name}</CardTitle>
@@ -238,7 +238,7 @@ export default function LaudosPage() {
                       <Card
                         key={model.id}
                         className="cursor-pointer border-blue-200 transition-all hover:shadow-md"
-                        onClick={() => handleCreateReport(model.id)}
+                        onClick={() => {}}
                       >
                         <CardHeader className="pb-2">
                           <CardTitle className="text-base text-blue-900">{model.name}</CardTitle>

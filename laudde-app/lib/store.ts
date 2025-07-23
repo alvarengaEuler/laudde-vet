@@ -32,7 +32,7 @@ interface ModelStore {
   // Reports
   reports: Report[]
   createReport: (modelId: string) => Report
-  createReportFromModel: (modelId: string) => Report
+  // createReportFromModel: (modelId: string) => Report
   updateReport: (id: string, updates: Partial<Report>) => void
   deleteReport: (id: string) => void
   updateReportField: (reportId: string, fieldId: string, updates: Partial<ReportField>) => void
@@ -235,44 +235,44 @@ export const useModelStore = create<ModelStore>()(
       return newReport
     },
 
-    createReportFromModel: (modelId) => {
-      const model = get().models.find((m) => m.id === modelId)
+    // createReportFromModel: (modelId) => {
+    //   const model = get().models.find((m) => m.id === modelId)
 
-      if (!model) {
-        throw new Error('Modelo não encontrado')
-      }
+    //   if (!model) {
+    //     throw new Error('Modelo não encontrado')
+    //   }
 
-      // Converter campos do modelo para campos do laudo
-      const reportFields: ReportField[] = model.fields.map((field) => ({
-        id: uuidv4(),
-        name: field.name,
-        type: field.type,
-        description: field.defaultDescription,
-        descriptionAlignment: field.descriptionAlignment,
-        content: field.templateContent || '',
-        tableContent: field.tableContent,
-      }))
+    //   // Converter campos do modelo para campos do laudo
+    //   const reportFields: ReportField[] = model.fields.map((field) => ({
+    //     id: uuidv4(),
+    //     name: field.name,
+    //     type: field.type,
+    //     description: field.defaultDescription,
+    //     descriptionAlignment: field.descriptionAlignment,
+    //     content: field.templateContent || '',
+    //     tableContent: field.tableContent,
+    //   }))
 
-      const newReport: Report = {
-        id: uuidv4(),
-        name: `Laudo - ${model.name}`,
-        modelId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        status: 'draft',
-        accessCode: generateAccessCode(),
-        headerData: model.headerData || getDefaultHeaderData(),
-        footerData: model.footerData || getDefaultFooterData(),
-        fields: reportFields,
-        images: [],
-      }
+    //   const newReport: Report = {
+    //     id: uuidv4(),
+    //     name: `Laudo - ${model.name}`,
+    //     modelId,
+    //     createdAt: new Date(),
+    //     updatedAt: new Date(),
+    //     status: 'draft',
+    //     accessCode: generateAccessCode(),
+    //     headerData: model.headerData || getDefaultHeaderData(),
+    //     footerData: model.footerData || getDefaultFooterData(),
+    //     fields: reportFields,
+    //     images: [],
+    //   }
 
-      set((state) => ({
-        reports: [...state.reports, newReport],
-      }))
+    //   set((state) => ({
+    //     reports: [...state.reports, newReport],
+    //   }))
 
-      return newReport
-    },
+    //   return newReport
+    // },
 
     updateReport: (id, updates) => {
       set((state) => ({
