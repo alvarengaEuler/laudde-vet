@@ -30,8 +30,6 @@ export async function PUT(req: NextRequest) {
   }
 
   const data = await req.json()
-  console.log('api id', id)
-  console.log('api data', data)
 
   try {
     const updated = await modelTemplateService.update(id, data)
@@ -42,8 +40,12 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params
+export async function DELETE(req: NextRequest) {
+  const id = req.nextUrl.pathname.split('/').pop()
+
+  if (!id) {
+    return NextResponse.json({ error: 'ID não fornecido na URL' }, { status: 400 })
+  }
 
   try {
     await modelTemplateService.delete(id)
