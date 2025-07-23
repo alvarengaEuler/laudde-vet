@@ -32,7 +32,9 @@ export function FieldEditDialog({ field, modelId, open, onOpenChange }: FieldEdi
   const { updateField } = useModelStore()
   const [formData, setFormData] = useState(field)
 
-  const templateContentRef = useRef<HTMLTextAreaElement>(null)
+  const templateContentRef = useRef<HTMLTextAreaElement>(
+    null
+  ) as React.RefObject<HTMLTextAreaElement>
   const [showFormattingToolbar, setShowFormattingToolbar] = useState(true)
 
   const handleSave = () => {
