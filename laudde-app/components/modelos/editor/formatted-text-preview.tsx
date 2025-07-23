@@ -41,10 +41,10 @@ const FormattedTextPreviewComponent = ({
       )
       // Lista não ordenada: - item
       .replace(/^[-*] (.+)$/gm, '<li>$1</li>')
-      .replace(/(<li>.*?<\/li>)/gs, '<ul class="list-disc pl-6">$1</ul>')
+      .replace(/(<li>.*?<\/li>)/g, '<ul class="list-disc pl-6">$1</ul>')
       // Lista ordenada: 1. item
       .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-      .replace(/(<li>.*?<\/li>)/gs, (match) => {
+      .replace(/(<li>.*?<\/li>)/g, (match) => {
         if (match.includes('ul')) return match
         return '<ol class="list-decimal pl-6">' + match + '</ol>'
       })
