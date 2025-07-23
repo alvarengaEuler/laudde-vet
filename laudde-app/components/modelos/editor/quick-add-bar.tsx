@@ -51,7 +51,7 @@ export function QuickAddBar({ modelId, className }: QuickAddBarProps) {
     },
   ]
 
-  const handleAddField = (type: 'textarea' | 'number' | 'table') => {
+  const handleAddField = (type: 'textarea' | 'image' | 'table' | 'header' | 'footer') => {
     console.log(`modelId: ${modelId}`)
     addFieldWithType(modelId, type)
   }

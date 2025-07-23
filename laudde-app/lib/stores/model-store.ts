@@ -20,7 +20,7 @@ interface ModelStore {
   setFieldsFromTemplate: (modelId: string, templateFields: Omit<Field, 'id'>[]) => void
 }
 
-export const useModelStore = create<ModelStore>()((set, get) => ({
+export const useModelStore = create<ModelStore>()((set) => ({
   models: [],
 
   fetchModels: async () => {

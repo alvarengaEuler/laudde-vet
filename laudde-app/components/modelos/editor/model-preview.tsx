@@ -13,24 +13,25 @@ interface ModelPreviewProps {
 }
 
 export function ModelPreview({ model }: ModelPreviewProps) {
-  const { variables } = useTemplateVariables() // 🔁 agora é reativo
+  const { variables } = useTemplateVariables()
+
+  const interpolate = (text: string) => {
+    return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => variables[key] ?? `{{${key}}}`)
+  }
 
   const renderField = (field: any) => {
-    const interpolate = (text: string) => {
-      return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => variables[key] ?? `{{${key}}}`)
-    }
-
     switch (field.type) {
       case 'textarea':
         return (
           <div className="space-y-2">
-            <div className="min-h-[80px] rounded border border-gray-50 bg-white p-3 text-sm whitespace-pre-wrap text-gray-600">
+            <div className="min-h-[80px] whitespace-pre-wrap rounded bg-white text-sm text-gray-600">
               {field.templateContent
                 ? interpolate(field.templateContent)
                 : field.defaultDescription || 'Campo de texto...'}
             </div>
           </div>
         )
+
       case 'number':
         return (
           <div className="space-y-2">
@@ -39,6 +40,7 @@ export function ModelPreview({ model }: ModelPreviewProps) {
             </div>
           </div>
         )
+
       case 'table':
         let tableData
         try {
@@ -106,18 +108,7 @@ export function ModelPreview({ model }: ModelPreviewProps) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {/* A4 Paper simulation with responsive sizing */}
-        <div
-          className="mx-auto h-[calc(100vh-200px)] max-w-full overflow-auto rounded-lg border border-gray-100 bg-white p-4 shadow-lg sm:p-8"
-
-          // className="mx-auto max-w-full rounded-lg border border-gray-100 bg-white p-4 shadow-lg sm:p-8"
-          // style={{
-          //   maxHeight: 'calc(100vh - 250px)',
-          //   overflow: 'auto',
-          //   width: '100%',
-          //   minHeight: '300px',
-          // }}
-        >
+        <div className="mx-auto h-[calc(100vh-200px)] max-w-full overflow-auto rounded-lg border border-gray-100 bg-white p-4 shadow-lg sm:p-8">
           {/* Header */}
           <div className="mb-8 border-b border-gray-200 pb-4 text-center">
             <h1 className="mb-2 text-2xl font-bold text-gray-900">LAUDO VETERINÁRIO</h1>
@@ -138,28 +129,20 @@ export function ModelPreview({ model }: ModelPreviewProps) {
               model.fields.map((field) => (
                 <div key={field.id} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <label className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
+                    <label className="text-sm font-semibold uppercase tracking-wide text-gray-900">
                       {field.name}
                     </label>
                   </div>
+
+                  {/* USO CORRETO DO FormattedTextPreview */}
                   {field.defaultDescription && (
-                    <div
-                      className={`text-xs text-gray-600 italic ${
-                        field.descriptionAlignment === 'center'
-                          ? 'text-center'
-                          : field.descriptionAlignment === 'right'
-                            ? 'text-right'
-                            : field.descriptionAlignment === 'justify'
-                              ? 'text-justify'
-                              : 'text-left'
-                      }`}
-                    >
-                      <FormattedTextPreview
-                        text={field.defaultDescription}
-                        alignment={field.descriptionAlignment || 'left'}
-                      />
-                    </div>
+                    <FormattedTextPreview
+                      text={field.defaultDescription}
+                      alignment={field.descriptionAlignment || 'left'}
+                      className="text-xs italic text-gray-600"
+                    />
                   )}
+
                   {renderField(field)}
                 </div>
               ))

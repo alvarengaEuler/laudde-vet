@@ -1,5 +1,7 @@
 'use client'
 
+import React from 'react'
+
 interface FormattedTextPreviewProps {
   text: string
   alignment?: string
@@ -9,36 +11,39 @@ interface FormattedTextPreviewProps {
 export function FormattedTextPreview({
   text,
   alignment = 'left',
-  className,
+  className = '',
 }: FormattedTextPreviewProps) {
   const formatText = (text: string): string => {
     if (!text) return ''
+    const fText = text
+      // Negrito
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Itálico
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      // Riscado
+      .replace(/~~(.*?)~~/g, '<del>$1</del>')
+      // Lista não ordenada
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/gs, '<ul class="list-disc pl-6 space-y-1">$1</ul>')
+      // Lista ordenada
+      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+      .replace(/(<li>.*<\/li>)/gs, (match) => {
+        if (match.includes('ul')) return match
+        return '<ol class="list-decimal pl-6 space-y-1">' + match + '</ol>'
+      })
+      // Citação
+      .replace(
+        /^> (.+)$/gm,
+        '<blockquote class="border-l-4 border-gray-300 pl-4 italic text-gray-500">$1</blockquote>'
+      )
+      // Quebras de linha
+      .replace(/\n/g, '<br>')
 
-    return (
-      text
-        // Negrito
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        // Itálico
-        .replace(/\*(.*?)\*/g, '<em>$1</em>')
-        // Riscado
-        .replace(/~~(.*?)~~/g, '<del>$1</del>')
-        // Lista não ordenada
-        .replace(/^- (.+)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
-        // Lista ordenada
-        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-        .replace(/(<li>.*<\/li>)/s, (match) => {
-          if (match.includes('<ul>')) return match
-          return '<ol>' + match + '</ol>'
-        })
-        // Citação
-        .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-        // Quebras de linha
-        .replace(/\n/g, '<br>')
-    )
+    console.log('FTEXT', fText)
+    return fText
   }
 
-  const getAlignmentClass = (alignment: string): string => {
+  const getAlignmentClass = () => {
     switch (alignment) {
       case 'center':
         return 'text-center'
@@ -53,11 +58,8 @@ export function FormattedTextPreview({
 
   return (
     <div
-      className={`prose prose-sm max-w-none ${getAlignmentClass(alignment)} ${className}`}
+      className={`space-y-2 text-sm leading-relaxed ${getAlignmentClass()} ${className}`}
       dangerouslySetInnerHTML={{ __html: formatText(text) }}
-      style={{
-        lineHeight: '1.5',
-      }}
     />
   )
 }
