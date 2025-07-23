@@ -1,3 +1,5 @@
+import { EditorFieldTypes } from "../models/models"
+
 export type Model = {
   id: string
   name: string
@@ -11,7 +13,7 @@ export type Model = {
 export type Field = {
   id: string
   name: string
-  type: 'textarea' | 'number' | 'table'
+  type: string
   defaultDescription?: string
   descriptionAlignment?: string
   required: boolean

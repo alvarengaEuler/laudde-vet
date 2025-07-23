@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FileText, Table, Plus, PanelsRightBottom, Dock, GalleryThumbnails } from 'lucide-react'
 import { useModelStore } from '@/lib/stores/model-store'
+import { EditorFieldTypes } from '@/lib/models/models'
 
 interface QuickAddBarProps {
   modelId: string
@@ -51,8 +52,7 @@ export function QuickAddBar({ modelId, className }: QuickAddBarProps) {
     },
   ]
 
-  const handleAddField = (type: 'textarea' | 'image' | 'table' | 'header' | 'footer') => {
-    console.log(`modelId: ${modelId}`)
+  const handleAddField = (type: string) => {
     addFieldWithType(modelId, type)
   }
 

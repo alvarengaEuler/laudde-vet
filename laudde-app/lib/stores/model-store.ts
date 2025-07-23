@@ -12,7 +12,7 @@ interface ModelStore {
   updateModel: (id: string, updates: Partial<Model>) => void
   deleteModel: (id: string) => void
   addField: (modelId: string) => void
-  addFieldWithType: (modelId: string, type: 'textarea' | 'number' | 'table') => void
+  addFieldWithType: (modelId: string, type: string) => void
   addFieldsFromVeterinaryTemplate: (modelId: string, templateFields: Omit<Field, 'id'>[]) => void
   updateField: (modelId: string, fieldId: string, updates: Partial<Field>) => void
   removeField: (modelId: string, fieldId: string) => void
@@ -116,7 +116,7 @@ export const useModelStore = create<ModelStore>()((set) => ({
     const newField: Field = {
       id: uuidv4(),
       name: fieldNames[type],
-      type,
+      type: type,
       required: false,
     }
 

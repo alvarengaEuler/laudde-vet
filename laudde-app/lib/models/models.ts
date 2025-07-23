@@ -9,6 +9,10 @@ export interface Field {
   descriptionAlignment?: 'left' | 'center' | 'right'
 }
 
+export interface EditorFieldTypes {
+  type: 'textarea' | 'image' | 'table' | 'header' | 'footer'
+}
+
 export interface ModelTemplate {
   id: string
   title: string
