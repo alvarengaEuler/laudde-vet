@@ -3,11 +3,10 @@
 import { create } from 'zustand'
 import { v4 as uuidv4 } from 'uuid'
 import type { Model, Field } from '@/lib/mocks/types'
+import { mockModels } from '@/lib/mocks/mock-data'
 
 interface ModelStore {
   models: Model[]
-  fetchModels: () => Promise<void>
-  addModel: (model: Model) => void
   createModel: (model: Model) => Model
   updateModel: (id: string, updates: Partial<Model>) => void
   deleteModel: (id: string) => void
@@ -21,60 +20,26 @@ interface ModelStore {
 }
 
 export const useModelStore = create<ModelStore>()((set, get) => ({
-  models: [],
-
-  fetchModels: async () => {
-    try {
-      const res = await fetch('/api/models')
-      const data = await res.json()
-
-      const normalized = data.map((model: any) => ({
-        id: model.id,
-        name: model.title,
-        createdAt: model.createdAt,
-        updatedAt: model.updatedAt,
-        fields: Array.isArray(model.fields)
-          ? model.fields
-          : Object.entries(model.fields || {}).map(([key, value]) => ({
-              id: key,
-              name: value,
-              type: 'textarea',
-              required: false,
-            })),
-      }))
-
-      set({ models: normalized })
-    } catch (error) {
-      console.error('Erro ao buscar modelos:', error)
-    }
-  },
-
-  addModel: (model) => {
-    set((state) => ({
-      models: [...state.models, model],
-    }))
-  },
+  models: mockModels,
 
   createModel: (model) => {
     const newModel: Model = {
       id: model.id || uuidv4(),
       name: model.name || 'Novo Modelo',
-      createdAt: model.createdAt ?? new Date().toISOString(),
-      updatedAt: model.updatedAt ?? new Date().toISOString(),
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
       fields: [],
     }
-
     set((state) => ({
       models: [...state.models, newModel],
     }))
-
     return newModel
   },
 
   updateModel: (id, updates) => {
     set((state) => ({
       models: state.models.map((model) =>
-        model.id === id ? { ...model, ...updates, updatedAt: new Date().toISOString() } : model
+        model.id === id ? { ...model, ...updates, updatedAt: new Date().toDateString() } : model
       ),
     }))
   },
@@ -99,7 +64,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
           ? {
               ...model,
               fields: [...model.fields, newField],
-              updatedAt: new Date().toISOString(),
+              updatedAt: new Date().toDateString(),
             }
           : model
       ),
@@ -107,6 +72,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
   },
 
   addFieldWithType: (modelId, type) => {
+    console.log('Adding field with type:', type)
     const fieldNames = {
       textarea: 'Campo Descrição da Estrutura',
       number: 'Campo Numérico',
@@ -133,7 +99,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
           ? {
               ...model,
               fields: [...model.fields, newField],
-              updatedAt: new Date().toISOString(),
+              updatedAt: new Date().toDateString(),
             }
           : model
       ),
@@ -141,6 +107,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
   },
 
   addFieldsFromVeterinaryTemplate: (modelId, templateFields) => {
+    console.log('addFieldsFromVeterinaryTemplate ')
     const newFields: Field[] = templateFields.map((field) => ({
       ...field,
       id: uuidv4(),
@@ -152,7 +119,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
           ? {
               ...model,
               fields: [...model.fields, ...newFields],
-              updatedAt: new Date().toISOString(),
+              updatedAt: new Date().toDateString(),
             }
           : model
       ),
@@ -168,7 +135,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
               fields: model.fields.map((field) =>
                 field.id === fieldId ? { ...field, ...updates } : field
               ),
-              updatedAt: new Date().toISOString(),
+              updatedAt: new Date().toDateString(),
             }
           : model
       ),
@@ -182,7 +149,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
           ? {
               ...model,
               fields: model.fields.filter((field) => field.id !== fieldId),
-              updatedAt: new Date().toISOString(),
+              updatedAt: new Date().toDateString(),
             }
           : model
       ),
@@ -192,7 +159,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
   reorderFields: (modelId, fields) => {
     set((state) => ({
       models: state.models.map((model) =>
-        model.id === modelId ? { ...model, fields, updatedAt: new Date().toISOString() } : model
+        model.id === modelId ? { ...model, fields, updatedAt: new Date().toDateString() } : model
       ),
     }))
   },
@@ -206,7 +173,7 @@ export const useModelStore = create<ModelStore>()((set, get) => ({
     set((state) => ({
       models: state.models.map((model) =>
         model.id === modelId
-          ? { ...model, fields: newFields, updatedAt: new Date().toISOString() }
+          ? { ...model, fields: newFields, updatedAt: new Date().toDateString() }
           : model
       ),
     }))

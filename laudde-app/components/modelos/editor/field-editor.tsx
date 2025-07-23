@@ -1,6 +1,6 @@
 'use client'
 
-import { useModelStore } from '@/lib/store'
+import { useModelStore } from '@/lib/stores/model-store'
 import {
   DndContext,
   closestCenter,
@@ -52,7 +52,7 @@ export function FieldEditor({ modelId }: FieldEditorProps) {
   if (model.fields.length === 0) {
     return (
       <div className="space-y-4">
-        <Card className="border-blue-200">
+        <Card className="">
           <CardContent className="py-12 text-center">
             <GripVertical className="mx-auto mb-4 h-16 w-16 text-blue-400" />
             <h3 className="mb-2 text-lg font-semibold text-blue-900">Nenhum campo adicionado</h3>
@@ -68,14 +68,14 @@ export function FieldEditor({ modelId }: FieldEditorProps) {
   }
 
   return (
-    <Card className="border-blue-200">
+    <Card className="">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-900">
-          <GripVertical className="h-5 w-5" />
+          {/* <GripVertical className="h-5 w-5" /> */}
           Campos do Modelo
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 px-2 py-2">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext
             items={model.fields.map((f) => f.id)}

@@ -34,8 +34,8 @@ export default function RootLayout({
           <div className="flex h-screen">
             <Sidebar />
             <div className="flex flex-1 flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-900/80">
-              <div className="flex-1 overflow-y-auto p-4 md:p-10">
-                <div className="absolute right-4 top-4 z-10">
+              <div className="flex-1 overflow-y-auto p-4 md:px-4">
+                <div className="absolute top-4 right-4 z-10">
                   <ThemeToggle />
                 </div>
                 <QueryClientProviders>

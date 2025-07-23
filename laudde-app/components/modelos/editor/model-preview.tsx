@@ -6,35 +6,39 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { FormattedTextPreview } from './formatted-text-preview'
 
+import { useTemplateVariables } from '@/lib/stores/template-variables-store'
+
 interface ModelPreviewProps {
   model: Model
 }
 
 export function ModelPreview({ model }: ModelPreviewProps) {
+  const { variables } = useTemplateVariables() // 🔁 agora é reativo
+
   const renderField = (field: any) => {
+    const interpolate = (text: string) => {
+      return text.replace(/\{\{\s*(\w+)\s*\}\}/g, (_, key) => variables[key] ?? `{{${key}}}`)
+    }
+
     switch (field.type) {
       case 'textarea':
         return (
           <div className="space-y-2">
-            <div className="min-h-[80px] rounded border border-gray-50 bg-white p-3 text-sm text-gray-600">
-              {field.templateContent ? (
-                <FormattedTextPreview text={field.templateContent} />
-              ) : (
-                field.defaultDescription || 'Campo de texto...'
-              )}
+            <div className="min-h-[80px] rounded border border-gray-50 bg-white p-3 text-sm whitespace-pre-wrap text-gray-600">
+              {field.templateContent
+                ? interpolate(field.templateContent)
+                : field.defaultDescription || 'Campo de texto...'}
             </div>
           </div>
         )
-
       case 'number':
         return (
           <div className="space-y-2">
             <div className="w-32 rounded border border-gray-200 bg-gray-50 p-2 text-sm text-gray-600">
-              {field.templateContent || '0'}
+              {interpolate(field.templateContent || '0')}
             </div>
           </div>
         )
-
       case 'table':
         let tableData
         try {
@@ -65,7 +69,7 @@ export function ModelPreview({ model }: ModelPreviewProps) {
                       <tr key={rowIndex}>
                         {row.map((cell: string, cellIndex: number) => (
                           <td key={cellIndex} className="border border-gray-200 p-2">
-                            {cell}
+                            {interpolate(cell)}
                           </td>
                         ))}
                       </tr>
@@ -95,7 +99,7 @@ export function ModelPreview({ model }: ModelPreviewProps) {
   }
 
   return (
-    <Card className="border-blue-200">
+    <Card className="border-gray-200 bg-white">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-blue-900">
           📄 Visualização do Laudo
@@ -104,13 +108,15 @@ export function ModelPreview({ model }: ModelPreviewProps) {
       <CardContent>
         {/* A4 Paper simulation with responsive sizing */}
         <div
-          className="mx-auto max-w-full rounded-lg bg-white p-4 shadow-lg sm:p-8"
-          style={{
-            maxHeight: 'calc(100vh - 250px)',
-            overflow: 'auto',
-            width: '100%',
-            minHeight: '300px',
-          }}
+          className="mx-auto h-[calc(100vh-200px)] max-w-full overflow-auto rounded-lg border border-gray-100 bg-white p-4 shadow-lg sm:p-8"
+
+          // className="mx-auto max-w-full rounded-lg border border-gray-100 bg-white p-4 shadow-lg sm:p-8"
+          // style={{
+          //   maxHeight: 'calc(100vh - 250px)',
+          //   overflow: 'auto',
+          //   width: '100%',
+          //   minHeight: '300px',
+          // }}
         >
           {/* Header */}
           <div className="mb-8 border-b border-gray-200 pb-4 text-center">
@@ -132,13 +138,13 @@ export function ModelPreview({ model }: ModelPreviewProps) {
               model.fields.map((field) => (
                 <div key={field.id} className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <label className="text-sm font-semibold uppercase tracking-wide text-gray-900">
+                    <label className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
                       {field.name}
                     </label>
                   </div>
                   {field.defaultDescription && (
                     <div
-                      className={`text-xs italic text-gray-600 ${
+                      className={`text-xs text-gray-600 italic ${
                         field.descriptionAlignment === 'center'
                           ? 'text-center'
                           : field.descriptionAlignment === 'right'

@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/select'
 import { Combobox } from '@/components/ui/combobox'
 import type { Field } from '@/lib/mocks/types'
-import { useModelStore } from '@/lib/store'
+import { useModelStore } from '@/lib/stores/model-store'
 import { fieldSuggestions } from '@/lib/mocks/field-suggestions'
 import { TextAlignmentControl } from './text-alignment-control'
 import { TextFormattingToolbar } from './text-formatting-toolbar'
@@ -33,7 +33,7 @@ export function FieldEditDialog({ field, modelId, open, onOpenChange }: FieldEdi
   const [formData, setFormData] = useState(field)
 
   const templateContentRef = useRef<HTMLTextAreaElement>(null)
-  const [showFormattingToolbar, setShowFormattingToolbar] = useState(false)
+  const [showFormattingToolbar, setShowFormattingToolbar] = useState(true)
 
   const handleSave = () => {
     updateField(modelId, field.id, formData)

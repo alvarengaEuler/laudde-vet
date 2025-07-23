@@ -1,8 +1,8 @@
 export type Model = {
   id: string
   name: string
-  createdAt: Date
-  updatedAt: Date
+  createdAt: string
+  updatedAt: string
   fields: Field[]
   headerData?: HeaderData
   footerData?: FooterData

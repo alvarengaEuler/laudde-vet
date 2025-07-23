@@ -28,7 +28,7 @@ enum AgeUnit {
 }
 
 enum ExamType {
-  OLTRASOUND
+  ULTRASOUND
   X_RAY
 }
 
@@ -101,6 +101,7 @@ model User {
 
   PatientOwner  PatientOwner[]
   ModelTemplate ModelTemplate[]
+  Report        Report[]
 }
 
 model UserProfile {
@@ -205,8 +206,8 @@ model Clinic {
 model ModelTemplate {
   id        String   @id @default(uuid())
   title     String
-  content   String // HTML ou texto padrão do laudo
-  category  String? // Categoria do modelo, por exemplo: "Ultrassom", "Raio-X", etc.
+  fields    Json? // campos do modelo, por exemplo: { "field1": "value1", "field2": "value2" }
+  examType  String? // Tipo de exame, por exemplo: "Ultrassom", "Raio-X", etc.
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -216,15 +217,15 @@ model ModelTemplate {
 }
 
 model Report {
-  id        String       @id @default(uuid())
+  id        String @id @default(uuid())
   patientId String
   clinicId  String
-  userId    String
-  type      ExamType
-  status    ReportStatus
 
-  images  ReportImage[] // Lista de URLs ou paths
-  content Json
+  type   String?
+  status ReportStatus @default(DRAFT)
+
+  images ReportImage[] // Lista de URLs ou paths
+  fields Json?
 
   patient Patient @relation(fields: [patientId], references: [id])
   clinic  Clinic  @relation(fields: [clinicId], references: [id])
@@ -239,9 +240,8 @@ model Report {
   attemptCount Int       @default(0)
   isBlocked    Boolean   @default(false)
 
-  ipAddress String?
-  userAgent String?
-  success   Boolean // true = acesso permitido, false = senha incorreta, bloqueado etc.
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   accesses AccessLog[]
 

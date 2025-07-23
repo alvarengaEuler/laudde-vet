@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useModelStore } from '@/lib/store'
+import { useModelStore } from '@/lib/stores/model-store'
 import { examTemplates } from '@/lib/mocks/exam-templates'
 import { Stethoscope } from 'lucide-react'
 

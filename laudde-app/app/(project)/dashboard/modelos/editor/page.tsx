@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Calendar, FileText, Grid3X3, List } from 'lucide-react'
+import { Plus, Calendar, FileText, Grid3X3, List, Trash } from 'lucide-react'
 import { useModelStore } from '@/lib/stores/model-store'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
@@ -17,13 +17,14 @@ export default function ModelsListPage() {
   const { models, createModel, fetchModels } = useModelStore()
   const router = useRouter()
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
+  const [modelToDelete, setModelToDelete] = useState<string | null>(null)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
 
   useEffect(() => {
     fetchModels()
   }, [])
 
   const handleCreateModel = () => {
-    console.log('handleCreateModel')
     const response = fetch('/api/models', {
       method: 'POST',
       headers: {
@@ -53,7 +54,43 @@ export default function ModelsListPage() {
     router.push(`/dashboard/modelos/editor/${id}`)
   }
 
-  const handleDeleteModel = (id: string) => {}
+  const handleDeleteModel = (id: string) => {
+    setModelToDelete(id)
+    setShowConfirmModal(true)
+  }
+
+  const handleDeleteModelConfirm = async () => {
+    if (!modelToDelete) {
+      console.warn('Nenhum modelo selecionado para deletar.')
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/models/${modelToDelete}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Erro ao deletar modelo.')
+      }
+
+      // Atualiza a lista local
+      await fetchModels()
+
+      // Limpa o estado e fecha o modal
+      setModelToDelete(null)
+      setShowConfirmModal(false)
+    } catch (error: any) {
+      console.error('Erro ao deletar modelo:', error)
+      alert(error.message || 'Erro ao deletar modelo. Tente novamente.')
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setModelToDelete(null)
+    setShowConfirmModal(false)
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50">
@@ -116,7 +153,9 @@ export default function ModelsListPage() {
               <Card
                 key={model.id}
                 className="cursor-pointer border-blue-200 transition-shadow hover:border-blue-300 hover:shadow-lg"
-                onClick={() => handleEditModel(model.id)}
+                onClick={() => {
+                  handleEditModel(model.id)
+                }}
               >
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -129,11 +168,26 @@ export default function ModelsListPage() {
                         })}
                       </CardDescription>
                     </div>
-                    {/* <EllipsisVertical className="h-5 w-5 text-blue-500 hover:text-blue-700" /> */}
-                    <ActionMenu
-                      onEdit={() => handleEditModel(model.id)}
-                      onDelete={() => handleDeleteModel(model.id)}
-                    />
+                    <Button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        handleDeleteModel(model.id)
+                      }}
+                      size="icon"
+                      variant="ghost"
+                    >
+                      <Trash size={22} className="text-red-500" />
+                    </Button>
+                    {/* <ActionMenu
+                      onEdit={() => {
+                        handleEditModel(model.id)
+                      }}
+                      onDelete={(e) => {
+                        e.stopPropagation()
+                        handleDeleteModel(model.id)
+                      }}
+                    /> */}
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -176,6 +230,28 @@ export default function ModelsListPage() {
           <ModelListView models={models} onEditModel={handleEditModel} />
         )}
       </div>
+
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="w-full max-w-md rounded-md bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-xl font-semibold text-blue-900">Confirmar exclusão</h2>
+            <p className="mb-6 text-blue-700">
+              Tem certeza que deseja excluir este modelo? Esta ação não pode ser desfeita.
+            </p>
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={handleCancelDelete}>
+                Cancelar
+              </Button>
+              <Button
+                className="bg-red-600 text-white hover:bg-red-700"
+                onClick={handleDeleteModelConfirm}
+              >
+                Deletar
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -97,7 +97,7 @@ export const examTemplates: Record<string, { name: string; fields: Omit<Field, '
         type: 'textarea',
         defaultDescription: 'Avaliação do cérvix',
         required: false,
-        templateContent: 'Cérvix fechado, aspecto normal',
+        templateContent: 'Cérvix fechado, aspecto normal com {{tam_cervix}} cm',
       },
       {
         name: 'Vagina',

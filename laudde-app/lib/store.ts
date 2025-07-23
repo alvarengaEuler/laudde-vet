@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from 'uuid'
 interface ModelStore {
   // Models
   models: Model[]
-  createModel: () => Model
+  createModel: (model: Model) => Model
   updateModel: (id: string, updates: Partial<Model>) => void
   deleteModel: (id: string) => void
   addField: (modelId: string) => void
@@ -43,346 +43,347 @@ interface ModelStore {
 }
 
 export const useModelStore = create<ModelStore>()(
-  persist(
-    (set, get) => ({
-      models: mockModels,
-      reports: mockReports,
+  (set, get) => ({
+    models: mockModels,
+    reports: mockReports,
 
-      // Model methods
-      createModel: () => {
-        const newModel: Model = {
-          id: uuidv4(),
-          name: 'Novo Modelo',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          fields: [],
-        }
+    // Model methods
+    createModel: (model) => {
+      const newModel: Model = {
+        id: uuidv4(),
+        name: model.name || 'Novo Modelo',
+        createdAt: model.createdAt,
+        updatedAt: model.updatedAt,
 
-        set((state) => ({
-          models: [...state.models, newModel],
-        }))
+        fields: [],
+      }
 
-        return newModel
-      },
+      set((state) => ({
+        models: [...state.models, newModel],
+      }))
 
-      updateModel: (id, updates) => {
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === id ? { ...model, ...updates, updatedAt: new Date() } : model
-          ),
-        }))
-      },
+      return newModel
+    },
 
-      deleteModel: (id) => {
-        set((state) => ({
-          models: state.models.filter((model) => model.id !== id),
-        }))
-      },
+    updateModel: (id, updates) => {
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === id ? { ...model, ...updates, updatedAt: new Date().toDateString() } : model
+        ),
+      }))
+    },
 
-      addField: (modelId) => {
-        const newField: Field = {
-          id: uuidv4(),
-          name: 'Novo Campo',
-          type: 'textarea',
-          required: false,
-        }
+    deleteModel: (id) => {
+      set((state) => ({
+        models: state.models.filter((model) => model.id !== id),
+      }))
+    },
 
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId
-              ? {
-                  ...model,
-                  fields: [...model.fields, newField],
-                  updatedAt: new Date(),
-                }
-              : model
-          ),
-        }))
-      },
+    addField: (modelId) => {
+      const newField: Field = {
+        id: uuidv4(),
+        name: 'Novo Campo',
+        type: 'textarea',
+        required: false,
+      }
 
-      addFieldWithType: (modelId, type) => {
-        const fieldNames = {
-          textarea: 'Campo de Texto',
-          number: 'Campo Numérico',
-          table: 'Tabela',
-        }
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId
+            ? {
+                ...model,
+                fields: [...model.fields, newField],
+                updatedAt: new Date().toDateString(),
+              }
+            : model
+        ),
+      }))
+    },
 
-        const newField: Field = {
-          id: uuidv4(),
-          name: fieldNames[type],
-          type,
-          required: false,
-        }
+    addFieldWithType: (modelId, type) => {
+      const fieldNames = {
+        textarea: 'Campo Descrição da Estrutura',
+        number: 'Campo Numérico',
+        table: 'Campo de Tabela',
+      }
 
-        if (type === 'table') {
-          newField.tableContent = JSON.stringify({
-            headers: ['Coluna 1', 'Coluna 2'],
-            rows: [['Valor 1', 'Valor 2']],
-          })
-        }
+      const newField: Field = {
+        id: uuidv4(),
+        name: fieldNames[type],
+        type,
+        required: false,
+      }
 
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId
-              ? {
-                  ...model,
-                  fields: [...model.fields, newField],
-                  updatedAt: new Date(),
-                }
-              : model
-          ),
-        }))
-      },
+      if (type === 'table') {
+        newField.tableContent = JSON.stringify({
+          headers: ['Coluna 1', 'Coluna 2'],
+          rows: [['Valor 1', 'Valor 2']],
+        })
+      }
 
-      addFieldsFromVeterinaryTemplate: (modelId, templateFields) => {
-        const newFields: Field[] = templateFields.map((field) => ({
-          ...field,
-          id: uuidv4(),
-        }))
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId
+            ? {
+                ...model,
+                fields: [...model.fields, newField],
+                updatedAt: new Date().toDateString(),
+              }
+            : model
+        ),
+      }))
+    },
 
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId
-              ? {
-                  ...model,
-                  fields: [...model.fields, ...newFields],
-                  updatedAt: new Date(),
-                }
-              : model
-          ),
-        }))
-      },
+    addFieldsFromVeterinaryTemplate: (modelId, templateFields) => {
+      const newFields: Field[] = templateFields.map((field) => ({
+        ...field,
+        id: uuidv4(),
+      }))
 
-      updateField: (modelId, fieldId, updates) => {
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId
-              ? {
-                  ...model,
-                  fields: model.fields.map((field) =>
-                    field.id === fieldId ? { ...field, ...updates } : field
-                  ),
-                  updatedAt: new Date(),
-                }
-              : model
-          ),
-        }))
-      },
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId
+            ? {
+                ...model,
+                fields: [...model.fields, ...newFields],
+                updatedAt: new Date().toDateString(),
+              }
+            : model
+        ),
+      }))
+    },
 
-      removeField: (modelId, fieldId) => {
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId
-              ? {
-                  ...model,
-                  fields: model.fields.filter((field) => field.id !== fieldId),
-                  updatedAt: new Date(),
-                }
-              : model
-          ),
-        }))
-      },
+    updateField: (modelId, fieldId, updates) => {
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId
+            ? {
+                ...model,
+                fields: model.fields.map((field) =>
+                  field.id === fieldId ? { ...field, ...updates } : field
+                ),
+                updatedAt: new Date().toDateString(),
+              }
+            : model
+        ),
+      }))
+    },
 
-      reorderFields: (modelId, fields) => {
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId ? { ...model, fields, updatedAt: new Date() } : model
-          ),
-        }))
-      },
+    removeField: (modelId, fieldId) => {
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId
+            ? {
+                ...model,
+                fields: model.fields.filter((field) => field.id !== fieldId),
+                updatedAt: new Date().toDateString(),
+              }
+            : model
+        ),
+      }))
+    },
 
-      setFieldsFromTemplate: (modelId, templateFields) => {
-        const newFields: Field[] = templateFields.map((field) => ({
-          ...field,
-          id: uuidv4(),
-        }))
+    reorderFields: (modelId, fields) => {
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId ? { ...model, fields, updatedAt: new Date().toDateString() } : model
+        ),
+      }))
+    },
 
-        set((state) => ({
-          models: state.models.map((model) =>
-            model.id === modelId ? { ...model, fields: newFields, updatedAt: new Date() } : model
-          ),
-        }))
-      },
+    setFieldsFromTemplate: (modelId, templateFields) => {
+      const newFields: Field[] = templateFields.map((field) => ({
+        ...field,
+        id: uuidv4(),
+      }))
 
-      // Report methods
-      createReport: (modelId) => {
-        const model = get().models.find((m) => m.id === modelId)
+      set((state) => ({
+        models: state.models.map((model) =>
+          model.id === modelId
+            ? { ...model, fields: newFields, updatedAt: new Date().toDateString() }
+            : model
+        ),
+      }))
+    },
 
-        if (!model) {
-          throw new Error('Modelo não encontrado')
-        }
+    // Report methods
+    createReport: (modelId) => {
+      const model = get().models.find((m) => m.id === modelId)
 
-        const newReport: Report = {
-          id: uuidv4(),
-          name: `Laudo - ${model.name}`,
-          modelId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          status: 'draft',
-          accessCode: generateAccessCode(),
-          headerData: model.headerData || getDefaultHeaderData(),
-          footerData: model.footerData || getDefaultFooterData(),
-          fields: [],
-          images: [],
-        }
+      if (!model) {
+        throw new Error('Modelo não encontrado')
+      }
 
-        set((state) => ({
-          reports: [...state.reports, newReport],
-        }))
+      const newReport: Report = {
+        id: uuidv4(),
+        name: `Laudo - ${model.name}`,
+        modelId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: 'draft',
+        accessCode: generateAccessCode(),
+        headerData: model.headerData || getDefaultHeaderData(),
+        footerData: model.footerData || getDefaultFooterData(),
+        fields: [],
+        images: [],
+      }
 
-        return newReport
-      },
+      set((state) => ({
+        reports: [...state.reports, newReport],
+      }))
 
-      createReportFromModel: (modelId) => {
-        const model = get().models.find((m) => m.id === modelId)
+      return newReport
+    },
 
-        if (!model) {
-          throw new Error('Modelo não encontrado')
-        }
+    createReportFromModel: (modelId) => {
+      const model = get().models.find((m) => m.id === modelId)
 
-        // Converter campos do modelo para campos do laudo
-        const reportFields: ReportField[] = model.fields.map((field) => ({
-          id: uuidv4(),
-          name: field.name,
-          type: field.type,
-          description: field.defaultDescription,
-          descriptionAlignment: field.descriptionAlignment,
-          content: field.templateContent || '',
-          tableContent: field.tableContent,
-        }))
+      if (!model) {
+        throw new Error('Modelo não encontrado')
+      }
 
-        const newReport: Report = {
-          id: uuidv4(),
-          name: `Laudo - ${model.name}`,
-          modelId,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          status: 'draft',
-          accessCode: generateAccessCode(),
-          headerData: model.headerData || getDefaultHeaderData(),
-          footerData: model.footerData || getDefaultFooterData(),
-          fields: reportFields,
-          images: [],
-        }
+      // Converter campos do modelo para campos do laudo
+      const reportFields: ReportField[] = model.fields.map((field) => ({
+        id: uuidv4(),
+        name: field.name,
+        type: field.type,
+        description: field.defaultDescription,
+        descriptionAlignment: field.descriptionAlignment,
+        content: field.templateContent || '',
+        tableContent: field.tableContent,
+      }))
 
-        set((state) => ({
-          reports: [...state.reports, newReport],
-        }))
+      const newReport: Report = {
+        id: uuidv4(),
+        name: `Laudo - ${model.name}`,
+        modelId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        status: 'draft',
+        accessCode: generateAccessCode(),
+        headerData: model.headerData || getDefaultHeaderData(),
+        footerData: model.footerData || getDefaultFooterData(),
+        fields: reportFields,
+        images: [],
+      }
 
-        return newReport
-      },
+      set((state) => ({
+        reports: [...state.reports, newReport],
+      }))
 
-      updateReport: (id, updates) => {
-        set((state) => ({
-          reports: state.reports.map((report) =>
-            report.id === id ? { ...report, ...updates, updatedAt: new Date() } : report
-          ),
-        }))
-      },
+      return newReport
+    },
 
-      deleteReport: (id) => {
-        set((state) => ({
-          reports: state.reports.filter((report) => report.id !== id),
-        }))
-      },
+    updateReport: (id, updates) => {
+      set((state) => ({
+        reports: state.reports.map((report) =>
+          report.id === id ? { ...report, ...updates, updatedAt: new Date() } : report
+        ),
+      }))
+    },
 
-      updateReportField: (reportId, fieldId, updates) => {
-        set((state) => ({
-          reports: state.reports.map((report) =>
-            report.id === reportId
-              ? {
-                  ...report,
-                  fields: report.fields.map((field) =>
-                    field.id === fieldId ? { ...field, ...updates } : field
-                  ),
-                  updatedAt: new Date(),
-                }
-              : report
-          ),
-        }))
-      },
+    deleteReport: (id) => {
+      set((state) => ({
+        reports: state.reports.filter((report) => report.id !== id),
+      }))
+    },
 
-      addReportImage: (reportId, image) => {
-        const newImage: ReportImage = {
-          ...image,
-          id: uuidv4(),
-        }
+    updateReportField: (reportId, fieldId, updates) => {
+      set((state) => ({
+        reports: state.reports.map((report) =>
+          report.id === reportId
+            ? {
+                ...report,
+                fields: report.fields.map((field) =>
+                  field.id === fieldId ? { ...field, ...updates } : field
+                ),
+                updatedAt: new Date(),
+              }
+            : report
+        ),
+      }))
+    },
 
-        set((state) => ({
-          reports: state.reports.map((report) =>
-            report.id === reportId
-              ? {
-                  ...report,
-                  images: [...report.images, newImage],
-                  updatedAt: new Date(),
-                }
-              : report
-          ),
-        }))
-      },
+    addReportImage: (reportId, image) => {
+      const newImage: ReportImage = {
+        ...image,
+        id: uuidv4(),
+      }
 
-      removeReportImage: (reportId, imageId) => {
-        set((state) => ({
-          reports: state.reports.map((report) =>
-            report.id === reportId
-              ? {
-                  ...report,
-                  images: report.images.filter((image) => image.id !== imageId),
-                  updatedAt: new Date(),
-                }
-              : report
-          ),
-        }))
-      },
+      set((state) => ({
+        reports: state.reports.map((report) =>
+          report.id === reportId
+            ? {
+                ...report,
+                images: [...report.images, newImage],
+                updatedAt: new Date(),
+              }
+            : report
+        ),
+      }))
+    },
 
-      publishReport: (reportId) => {
-        set((state) => ({
-          reports: state.reports.map((report) =>
-            report.id === reportId
-              ? {
-                  ...report,
-                  status: 'published',
-                  updatedAt: new Date(),
-                }
-              : report
-          ),
-        }))
-      },
+    removeReportImage: (reportId, imageId) => {
+      set((state) => ({
+        reports: state.reports.map((report) =>
+          report.id === reportId
+            ? {
+                ...report,
+                images: report.images.filter((image) => image.id !== imageId),
+                updatedAt: new Date(),
+              }
+            : report
+        ),
+      }))
+    },
 
-      getReportByAccessCode: (accessCode) => {
-        return get().reports.find(
-          (report) => report.accessCode === accessCode && report.status === 'published'
-        )
-      },
-    }),
-    {
-      name: 'veterinary-models-storage',
-      // Add this hydration function to convert date strings back to Date objects
-      deserialize: (str) => {
-        const parsed = JSON.parse(str)
+    publishReport: (reportId) => {
+      set((state) => ({
+        reports: state.reports.map((report) =>
+          report.id === reportId
+            ? {
+                ...report,
+                status: 'published',
+                updatedAt: new Date(),
+              }
+            : report
+        ),
+      }))
+    },
 
-        // Convert date strings back to Date objects for models
-        if (parsed.state && parsed.state.models) {
-          parsed.state.models = parsed.state.models.map((model) => ({
-            ...model,
-            createdAt: new Date(model.createdAt),
-            updatedAt: new Date(model.updatedAt),
-          }))
-        }
+    getReportByAccessCode: (accessCode) => {
+      return get().reports.find(
+        (report) => report.accessCode === accessCode && report.status === 'published'
+      )
+    },
+  })
+  // {
+  //   name: 'veterinary-models-storage',
+  //   // Add this hydration function to convert date strings back to Date objects
+  //   deserialize: (str) => {
+  //     const parsed = JSON.parse(str)
 
-        // Convert date strings back to Date objects for reports
-        if (parsed.state && parsed.state.reports) {
-          parsed.state.reports = parsed.state.reports.map((report) => ({
-            ...report,
-            createdAt: new Date(report.createdAt),
-            updatedAt: new Date(report.updatedAt),
-          }))
-        }
+  //     // Convert date strings back to Date objects for models
+  //     if (parsed.state && parsed.state.models) {
+  //       parsed.state.models = parsed.state.models.map((model) => ({
+  //         ...model,
+  //         createdAt: model.createdAt,
+  //         updatedAt: model.updatedAt,
+  //       }))
+  //     }
 
-        return parsed
-      },
-    }
-  )
+  //     // Convert date strings back to Date objects for reports
+  //     if (parsed.state && parsed.state.reports) {
+  //       parsed.state.reports = parsed.state.reports.map((report) => ({
+  //         ...report,
+  //         createdAt: report.createdAt,
+  //         updatedAt: report.updatedAt,
+  //       }))
+  //     }
+
+  //     return parsed
+  //   },
+  // }
 )
 
 function generateAccessCode(): string {

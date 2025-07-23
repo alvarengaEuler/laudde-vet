@@ -3,7 +3,7 @@ import type { Report } from './types'
 export const mockReports: Report[] = [
   {
     id: 'r1',
-    name: 'Laudo - Exame Gestacional Bovino',
+    name: 'Laudo - Exame Gestacional Eulino',
     modelId: '1',
     createdAt: new Date('2024-05-15'),
     updatedAt: new Date('2024-05-15'),

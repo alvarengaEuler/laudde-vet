@@ -1,38 +1,78 @@
 'use client'
 
 import { useParams, useRouter } from 'next/navigation'
-import { useModelStore } from '@/lib/store'
+import { useEffect, useState } from 'react'
+import { useModelStore } from '@/lib/stores/model-store'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { ArrowLeft, Eye, EyeOff, Plus, FileJson } from 'lucide-react'
-import { useState } from 'react'
 import { FieldEditor } from '@/components/modelos/editor/field-editor'
 import { ModelPreview } from '@/components/modelos/editor/model-preview'
-import { ExamTypeSelector } from '@/components/modelos/editor/exam-type-selector'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { AutoSaveIndicator } from '@/components/modelos/editor/auto-save-indicator'
-import { useAutoSave } from '@/hooks/use-auto-save'
 import { ModelJsonViewer } from '@/components/modelos/editor/model-json.viewer'
+import { ToolBar } from '@/components/modelos/editor/toolbar'
 
 export default function EditorPage() {
   const params = useParams()
   const router = useRouter()
-  const { models, updateModel, addField } = useModelStore()
+  const modelId = params.id as string
+
+  const {
+    models,
+    updateModel,
+    addField,
+    addModel, // <- nova função da store
+  } = useModelStore()
+
+  const [loading, setLoading] = useState(true)
   const [showPreview, setShowPreview] = useState(false)
   const [showJsonViewer, setShowJsonViewer] = useState(false)
 
-  const modelId = params.id as string
   const model = models.find((m) => m.id === modelId)
 
-  const { lastSaved, saving } = useAutoSave({
-    data: model,
-    onSave: (data) => {
-      if (data) {
-        updateModel(data.id, data)
+  useEffect(() => {
+    if (!modelId || model) {
+      setLoading(false)
+      return
+    }
+
+    const fetchModelById = async () => {
+      try {
+        const res = await fetch(`/api/models/${modelId}`)
+        if (!res.ok) throw new Error('Erro ao buscar modelo')
+
+        const data = await res.json()
+
+        const normalized = {
+          id: data.id,
+          name: data.title,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt,
+          fields: Array.isArray(data.fields)
+            ? data.fields
+            : Object.entries(data.fields || {}).map(([key, value]) => ({
+                id: key,
+                name: value,
+                type: 'textarea',
+                required: false,
+              })),
+        }
+
+        addModel(normalized)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setLoading(false)
       }
-    },
-    interval: 60000, // 1 minuto
-  })
+    }
+
+    fetchModelById()
+  }, [modelId, model, addModel])
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-slate-50">
+        <p className="text-blue-800">Carregando modelo...</p>
+      </div>
+    )
+  }
 
   if (!model) {
     return (
@@ -55,77 +95,48 @@ export default function EditorPage() {
     addField(modelId)
   }
 
+  const saveTemplate = async () => {
+    const payload = {
+      name: model.name,
+      fields: model.fields,
+    }
+
+    const response = await fetch('/api/models', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    })
+
+    if (response.ok) {
+      alert('Template salvo com sucesso!')
+    } else {
+      alert('Erro ao salvar template')
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50">
-      <div className="container mx-auto px-4 py-6">
-        {/* Header */}
-        <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              onClick={() => router.push('/')}
-              className="text-blue-700 hover:text-blue-900"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Button>
-            <div>
-              <Input
-                value={model.name}
-                onChange={(e) => handleNameChange(e.target.value)}
-                className="h-auto border-none bg-transparent p-0 text-xl font-bold text-blue-900 focus-visible:ring-0"
-                placeholder="Nome do modelo"
-              />
-            </div>
-            <AutoSaveIndicator lastSaved={lastSaved} saving={saving} />
-          </div>
+    <div className="mt-8 min-h-screen md:mt-0">
+      <div className="container mx-auto py-6">
+        <ToolBar
+          handleNameChange={handleNameChange}
+          handleAddField={handleAddField}
+          showPreview={showPreview}
+          setShowPreview={setShowPreview}
+          model={model}
+          lastSaved={null}
+          saving={false}
+          setShowJsonViewer={setShowJsonViewer}
+          modelId={modelId}
+          openJsonViewer={() => setShowJsonViewer(true)}
+          backButton={() => router.back()}
+          handleSaveModel={saveTemplate}
+        />
 
-          <div className="mt-2 flex flex-wrap items-center gap-2 sm:mt-0">
-            {/* Mobile preview toggle */}
-            <div className="lg:hidden">
-              <Sheet open={showPreview} onOpenChange={setShowPreview}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" className="border-blue-300">
-                    {showPreview ? (
-                      <EyeOff className="mr-2 h-4 w-4" />
-                    ) : (
-                      <Eye className="mr-2 h-4 w-4" />
-                    )}
-                    Visualizar
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-full sm:max-w-lg">
-                  <ModelPreview model={model} />
-                </SheetContent>
-              </Sheet>
-            </div>
-
-            <ExamTypeSelector modelId={modelId} />
-
-            <Button
-              variant="outline"
-              onClick={() => setShowJsonViewer(true)}
-              className="border-blue-300 text-blue-700 hover:text-blue-900"
-            >
-              <FileJson className="mr-2 h-4 w-4" />
-              Ver JSON
-            </Button>
-
-            <Button onClick={handleAddField} className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="mr-2 h-4 w-4" />
-              Adicionar Campo
-            </Button>
-          </div>
-        </div>
-
-        {/* Main content */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          {/* Editor */}
           <div className="space-y-4">
             <FieldEditor modelId={modelId} />
           </div>
 
-          {/* Preview - Desktop only */}
           <div className="hidden lg:block">
             <div className="sticky top-6">
               <ModelPreview model={model} />
@@ -134,7 +145,6 @@ export default function EditorPage() {
         </div>
       </div>
 
-      {/* JSON Viewer Modal */}
       <ModelJsonViewer model={model} open={showJsonViewer} onOpenChange={setShowJsonViewer} />
     </div>
   )

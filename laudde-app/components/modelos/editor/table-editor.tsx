@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus, Trash2, Save } from 'lucide-react'
 import type { Field } from '@/lib/mocks/types'
-import { useModelStore } from '@/lib/store'
+import { useModelStore } from '@/lib/stores/model-store'
 
 interface TableEditorProps {
   field: Field

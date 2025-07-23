@@ -12,8 +12,8 @@ interface UseAutoSaveOptions<T> {
 export function useAutoSave<T>({
   data,
   onSave,
-  interval = 30000, // 30 seconds default
-  debounce = 1000, // 1 second debounce
+  interval = 60000, // 30 seconds default
+  debounce = 10000, // 1 second debounce
 }: UseAutoSaveOptions<T>) {
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [saving, setSaving] = useState(false)
