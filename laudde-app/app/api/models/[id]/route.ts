@@ -4,10 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { modelTemplateService } from '@/lib/services/model-template'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params
   try {
     const model = await prisma.modelTemplate.findUnique({
-      where: { id: params.id },
+      where: { id: id },
     })
 
     if (!model) {
