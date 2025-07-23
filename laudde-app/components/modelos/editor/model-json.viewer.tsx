@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Copy, Download, Eye } from 'lucide-react'
 import type { Model } from '@/lib/mocks/types'
+import { toast } from 'sonner'
 
 interface ModelJsonViewerProps {
   model: Model
@@ -14,7 +15,6 @@ interface ModelJsonViewerProps {
 }
 
 export function ModelJsonViewer({ model, open, onOpenChange }: ModelJsonViewerProps) {
-  //   const { toast } = useToast()
   const [copied, setCopied] = useState(false)
 
   const modelJson = JSON.stringify(model, null, 2)
@@ -23,17 +23,13 @@ export function ModelJsonViewer({ model, open, onOpenChange }: ModelJsonViewerPr
     try {
       await navigator.clipboard.writeText(modelJson)
       setCopied(true)
-      toast({
-        title: 'JSON copiado!',
-        description: 'O JSON do modelo foi copiado para a área de transferência.',
-      })
+
+      toast('O JSON do modelo foi copiado para a área de transferência.')
       setTimeout(() => setCopied(false), 2000)
     } catch (error) {
-      //   toast({
-      //     title: 'Erro ao copiar',
-      //     description: 'Não foi possível copiar o JSON.',
-      //     variant: 'destructive',
-      //   })
+      toast(`Erro ao copiar. Não foi possível copiar o JSON. ${error}`, {
+        style: { background: '#f87171', color: '#fff' },
+      })
     }
   }
 
@@ -48,10 +44,7 @@ export function ModelJsonViewer({ model, open, onOpenChange }: ModelJsonViewerPr
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
 
-    // toast({
-    //   title: 'Download iniciado!',
-    //   description: 'O arquivo JSON está sendo baixado.',
-    // })
+    toast('O arquivo JSON está sendo baixado.')
   }
 
   const getFieldTypeStats = () => {

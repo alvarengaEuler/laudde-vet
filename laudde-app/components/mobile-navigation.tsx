@@ -3,19 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  LayoutDashboard,
-  FileText,
-  Users,
-  Building2,
-  FileCode,
-  DollarSign,
-  LogOut,
-  Menu,
-  X,
-  Calculator,
-  User,
-} from 'lucide-react'
+import { LogOut, Menu, X } from 'lucide-react'
 import { menuItems } from './sidebar/menu-itens'
 
 const MobileNavigation = () => {

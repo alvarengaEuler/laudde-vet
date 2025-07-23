@@ -1,11 +1,10 @@
 import { ExamTypeSelector } from '@/components/modelos/editor/exam-type-selector'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { AutoSaveIndicator } from '@/components/modelos/editor/auto-save-indicator'
+
 import { ArrowLeft, Eye, EyeOff, Plus, FileJson, Pencil, Save } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ModelPreview } from './model-preview'
-import { useRouter } from 'next/router'
 
 type ToolBarProps = {
   handleNameChange: (name: string) => void
@@ -29,14 +28,13 @@ export function ToolBar({
   showPreview,
   setShowPreview,
   model,
-  lastSaved,
-  saving,
+
   setShowJsonViewer,
   modelId,
   backButton,
 }: ToolBarProps) {
   return (
-    <div className="mt-4 mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-6 mt-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       {/* Nome e botão de voltar */}
       <div className="flex w-full items-center gap-3">
         {backButton && (

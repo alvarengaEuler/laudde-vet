@@ -13,7 +13,7 @@ export type ContentType = {
 }
 
 interface TemplateInput {
-  title: string
+  name: string
   examType: string
   fields: ContentType[]
 }
@@ -47,7 +47,7 @@ export const modelTemplateService = {
     return prisma.modelTemplate.update({
       where: { id },
       data: {
-        title: data.title,
+        title: data.name,
         examType: data.examType === 'ULTRASOUND' ? ExamType.ULTRASOUND : ExamType.X_RAY,
         fields: data.fields,
       },

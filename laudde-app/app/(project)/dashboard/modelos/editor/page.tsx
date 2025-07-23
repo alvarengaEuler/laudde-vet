@@ -11,7 +11,6 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
 import { ModelListView } from '@/components/modelos/editor/model-list-view'
-import ActionMenu from '@/components/modelos/editor/action-menu'
 
 export default function ModelsListPage() {
   const { models, createModel, fetchModels } = useModelStore()

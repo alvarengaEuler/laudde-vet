@@ -1,5 +1,3 @@
-import { financialTransactions } from '../mock-data'
-
 export interface Field {
   id: string
   name: string

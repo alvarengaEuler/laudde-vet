@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { FileText, Table, Hash, Plus } from 'lucide-react'
+import { FileText, Table, Plus, PanelsRightBottom, Dock, GalleryThumbnails } from 'lucide-react'
 import { useModelStore } from '@/lib/stores/model-store'
 
 interface QuickAddBarProps {
@@ -22,10 +22,10 @@ export function QuickAddBar({ modelId, className }: QuickAddBarProps) {
       color: 'bg-blue-50 hover:bg-blue-100 border-blue-200 text-blue-700',
     },
     {
-      type: 'number' as const,
-      label: 'Número',
-      icon: Hash,
-      description: 'Campo numérico',
+      type: 'image' as const,
+      label: 'Imagem',
+      icon: PanelsRightBottom,
+      description: 'Campo Imagem',
       color: 'bg-green-50 hover:bg-green-100 border-green-200 text-green-700',
     },
     {
@@ -34,6 +34,20 @@ export function QuickAddBar({ modelId, className }: QuickAddBarProps) {
       icon: Table,
       description: 'Tabela editável',
       color: 'bg-purple-50 hover:bg-purple-100 border-purple-200 text-purple-700',
+    },
+    {
+      type: 'header' as const,
+      label: 'Cabeçalho',
+      icon: GalleryThumbnails,
+      description: 'Campo Rodapé',
+      color: 'bg-rose-50 hover:bg-rose-100 border-rose-200 text-rose-700',
+    },
+    {
+      type: 'footer' as const,
+      label: 'Rodapé',
+      icon: Dock,
+      description: 'Campo Rodapé',
+      color: 'bg-amber-50 hover:bg-amber-100 border-amber-200 text-amber-700',
     },
   ]
 

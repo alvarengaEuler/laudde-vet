@@ -8,6 +8,7 @@ import { FieldEditor } from '@/components/modelos/editor/field-editor'
 import { ModelPreview } from '@/components/modelos/editor/model-preview'
 import { ModelJsonViewer } from '@/components/modelos/editor/model-json.viewer'
 import { ToolBar } from '@/components/modelos/editor/toolbar'
+import { toast } from 'sonner'
 
 export default function EditorPage() {
   const params = useParams()
@@ -96,21 +97,32 @@ export default function EditorPage() {
   }
 
   const saveTemplate = async () => {
+    if (!model.id) {
+      toast(`Erro ao salvar, id inexistente.`, {
+        style: { background: '#f87171', color: '#fff' },
+      })
+      return
+    }
+
     const payload = {
       name: model.name,
       fields: model.fields,
     }
 
-    const response = await fetch('/api/models', {
-      method: 'POST',
+    const response = await fetch(`/api/models/${model.id}`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     })
 
     if (response.ok) {
-      alert('Template salvo com sucesso!')
+      toast(`Modelo salvo com sucesso`, {
+        style: { background: 'oklch(92.5% 0.084 155.995)', color: 'oklch(37.2% 0.044 257.287)' },
+      })
     } else {
-      alert('Erro ao salvar template')
+      toast(`Erro ao salvar o template`, {
+        style: { background: '#f87171', color: '#fff' },
+      })
     }
   }
 
