@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 import type { Model, Field } from '@/lib/mocks/types'
 
 interface ModelStore {
+  loading: boolean
   models: Model[]
   fetchModels: () => Promise<void>
   addModel: (model: Model) => void
@@ -21,9 +22,15 @@ interface ModelStore {
 }
 
 export const useModelStore = create<ModelStore>()((set) => ({
+  loading: false,
   models: [],
 
+  setLoading: (value: boolean) => {
+    set({ loading: value })
+  },
+
   fetchModels: async () => {
+    set({ loading: true }) // Ativa o loading
     try {
       const res = await fetch('/api/models')
       const data = await res.json()
@@ -46,6 +53,8 @@ export const useModelStore = create<ModelStore>()((set) => ({
       set({ models: normalized })
     } catch (error) {
       console.error('Erro ao buscar modelos:', error)
+    } finally {
+      set({ loading: false }) // Desativa o loading
     }
   },
 

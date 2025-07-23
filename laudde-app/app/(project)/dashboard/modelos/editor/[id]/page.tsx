@@ -144,7 +144,7 @@ export default function EditorPage() {
           handleSaveModel={saveTemplate}
         />
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="mb-12 grid grid-cols-1 gap-6 md:mb-0 lg:grid-cols-2">
           <div className="space-y-4">
             <FieldEditor modelId={modelId} />
           </div>

@@ -4,16 +4,15 @@ import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Calendar, FileText, Grid3X3, List, Trash } from 'lucide-react'
+import { Plus, Calendar, FileText, Grid3X3, List, Trash, Loader2 } from 'lucide-react'
 import { useModelStore } from '@/lib/stores/model-store'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-
 import { ModelListView } from '@/components/modelos/editor/model-list-view'
 
 export default function ModelsListPage() {
-  const { models, createModel, fetchModels } = useModelStore()
+  const { models, createModel, fetchModels, loading } = useModelStore()
   const router = useRouter()
   const [viewMode, setViewMode] = useState<'cards' | 'list'>('cards')
   const [modelToDelete, setModelToDelete] = useState<string | null>(null)
@@ -26,9 +25,7 @@ export default function ModelsListPage() {
   const handleCreateModel = () => {
     const response = fetch('/api/models', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name: 'Novo Modelo Ultrassom', ExamType: 'ULTRASOUND', fields: [] }),
     })
       .then((res) => res.json())
@@ -59,25 +56,14 @@ export default function ModelsListPage() {
   }
 
   const handleDeleteModelConfirm = async () => {
-    if (!modelToDelete) {
-      console.warn('Nenhum modelo selecionado para deletar.')
-      return
-    }
-
+    if (!modelToDelete) return
     try {
-      const response = await fetch(`/api/models/${modelToDelete}`, {
-        method: 'DELETE',
-      })
-
+      const response = await fetch(`/api/models/${modelToDelete}`, { method: 'DELETE' })
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || 'Erro ao deletar modelo.')
       }
-
-      // Atualiza a lista local
       await fetchModels()
-
-      // Limpa o estado e fecha o modal
       setModelToDelete(null)
       setShowConfirmModal(false)
     } catch (error: any) {
@@ -92,11 +78,11 @@ export default function ModelsListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50">
+    <div className="md:mt:10 mt-6 min-h-screen bg-gradient-to-br from-white to-slate-50">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="mb-2 text-3xl font-bold text-blue-900">
+            <h1 className="mb-2 text-2xl font-bold text-blue-900 md:text-3xl">
               Modelos de Laudos Veterinários
             </h1>
             <p className="text-blue-700">Gerencie e edite seus modelos de laudos de forma visual</p>
@@ -132,7 +118,13 @@ export default function ModelsListPage() {
           </div>
         </div>
 
-        {models.length === 0 ? (
+        {/* Loading Spinner */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+            <p className="mt-4 text-blue-700">Carregando modelos...</p>
+          </div>
+        ) : models.length === 0 ? (
           <Card className="border-blue-200 py-12 text-center">
             <CardContent>
               <FileText className="mx-auto mb-4 h-16 w-16 text-blue-400" />
@@ -147,14 +139,12 @@ export default function ModelsListPage() {
             </CardContent>
           </Card>
         ) : viewMode === 'cards' ? (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mb-12 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {models.map((model) => (
               <Card
                 key={model.id}
                 className="cursor-pointer border-blue-200 transition-shadow hover:border-blue-300 hover:shadow-lg"
-                onClick={() => {
-                  handleEditModel(model.id)
-                }}
+                onClick={() => handleEditModel(model.id)}
               >
                 <CardHeader>
                   <div className="flex items-center justify-between">
@@ -178,15 +168,6 @@ export default function ModelsListPage() {
                     >
                       <Trash size={22} className="text-red-500" />
                     </Button>
-                    {/* <ActionMenu
-                      onEdit={() => {
-                        handleEditModel(model.id)
-                      }}
-                      onDelete={(e) => {
-                        e.stopPropagation()
-                        handleDeleteModel(model.id)
-                      }}
-                    /> */}
                   </div>
                 </CardHeader>
                 <CardContent>
