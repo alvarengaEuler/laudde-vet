@@ -10,6 +10,7 @@ import { uploadImage } from '@/lib/uploadImage'
 
 import { UserProfile } from '@prisma/client'
 import { useQuery } from '@tanstack/react-query'
+import { ProfileSkeleton } from './_components/profile-skeleton'
 
 // Fetcher para React Query
 async function fetchUserProfile(): Promise<Partial<UserProfile>> {
@@ -182,7 +183,7 @@ export default function ProfilePage() {
   }
 
   if (isLoading) {
-    return <p>Carregando perfil...</p>
+    return <ProfileSkeleton />
   }
 
   if (isError) {
