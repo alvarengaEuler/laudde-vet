@@ -2,7 +2,6 @@ import {
   BriefcaseMedical,
   Building2,
   Dog,
-  DollarSign,
   FileCode,
   FileText,
   LayoutDashboard,
