@@ -11,7 +11,7 @@ export async function uploadImage(
   const timestamp = Date.now() // só executado no navegador
   const filePath = `${folder}/${userId}-${timestamp}.${fileExt}`
 
-  const { data, error } = await supabase.storage.from('avatars').upload(filePath, file, {
+  const { error } = await supabase.storage.from('avatars').upload(filePath, file, {
     cacheControl: '3600',
     upsert: true,
   })
