@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   ShieldCheck,
   Tag,
+  User,
   Users,
 } from 'lucide-react'
 
@@ -19,7 +20,8 @@ export const menuItems = [
   { name: 'Pacientes', href: '/dashboard/pacientes', icon: Dog },
   { name: 'Clínicas', href: '/dashboard/clinicas', icon: Building2 },
   { name: 'Veterinários', href: '/dashboard/vets', icon: BriefcaseMedical },
-  { name: 'Financeiross', href: '/dashboard/financeiro', icon: DollarSign },
+  // { name: 'Financeiross', href: '/dashboard/financeiro', icon: DollarSign },
+  { name: 'Perfil', href: '/dashboard/me', icon: User },
 ]
 
 export const adminMenuItems = [

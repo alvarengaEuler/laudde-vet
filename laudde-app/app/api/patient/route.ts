@@ -32,7 +32,7 @@ export async function POST(req: Request) {
         weightUnit: body.weightUnit,
         ownerName: body.ownerName,
         ownerPhone: body.ownerPhone,
-        userId: '22a8ab94-b684-45e5-a484-9417ec1d6176',
+        userId: '22222222-2222-2222-2222-222222222222',
         patientOwnerId: body.tutorId, // Assuming you have this field in your request body
       },
     })

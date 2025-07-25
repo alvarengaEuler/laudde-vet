@@ -7,7 +7,7 @@ import StatsCard from '@/components/dashboard/stats-card'
 import RevenueChart from '@/components/dashboard/revenue-chart'
 import RecentPatients from '@/components/dashboard/recent-patients'
 import { getMonthlyRevenueBySource, getRecentPatients } from '@/lib/mock-data'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Calendar, ArrowRight, BarChart2 } from 'lucide-react'
 
 // Substitua a função Dashboard pelo seguinte código
@@ -72,76 +72,84 @@ export default function Dashboard() {
   const revenueBySource = getMonthlyRevenueBySource()
   const recentPatients = getRecentPatients(5)
 
-  return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-        <div>
-          <h1 className="text-xl font-bold sm:text-2xl">Dashboard</h1>
-          <p className="text-sm text-gray-500">Visão geral do seu sistema de laudos</p>
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return (
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
+          <div>
+            <h1 className="text-xl font-bold sm:text-2xl">Dashboard</h1>
+            <p className="text-sm text-gray-500">Visão geral do seu sistema de laudos</p>
+          </div>
+
+          <div className="flex flex-col space-y-2 rounded-lg border border-red-500 p-3 shadow-sm sm:flex-row sm:space-x-4 sm:space-y-0">
+            <div className="flex items-center">
+              <Calendar size={18} className="mr-2 text-gray-500" />
+              <input
+                type="date"
+                name="startDate"
+                value={dateRange.startDate}
+                onChange={handleDateChange}
+                className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+              />
+            </div>
+            <div className="flex items-center">
+              <ArrowRight size={18} className="mx-1 text-gray-500" />
+              <input
+                type="date"
+                name="endDate"
+                value={dateRange.endDate}
+                onChange={handleDateChange}
+                className="rounded-md border border-gray-300 px-2 py-1 text-sm"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col space-y-2 rounded-lg border border-red-500 p-3 shadow-sm sm:flex-row sm:space-x-4 sm:space-y-0">
-          <div className="flex items-center">
-            <Calendar size={18} className="mr-2 text-gray-500" />
-            <input
-              type="date"
-              name="startDate"
-              value={dateRange.startDate}
-              onChange={handleDateChange}
-              className="rounded-md border border-gray-300 px-2 py-1 text-sm"
-            />
-          </div>
-          <div className="flex items-center">
-            <ArrowRight size={18} className="mx-1 text-gray-500" />
-            <input
-              type="date"
-              name="endDate"
-              value={dateRange.endDate}
-              onChange={handleDateChange}
-              className="rounded-md border border-gray-300 px-2 py-1 text-sm"
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
+          <StatsCard
+            title="Laudos Emitidos"
+            value={reportsInPeriod}
+            icon={<FileText size={20} />}
+            description="No período selecionado"
+            colorClass="text-blue-600 bg-blue-50"
+          />
+          <StatsCard
+            title="Receita Total"
+            value={`R$ ${totalReceived.toFixed(2)}`}
+            icon={<DollarSign size={20} />}
+            description="No período selecionado"
+            colorClass="text-green-600 bg-green-50"
+          />
+          <StatsCard
+            title="Valor a Receber"
+            value={`R$ ${totalPending.toFixed(2)}`}
+            icon={<BarChart2 size={20} />}
+            description="Pagamentos pendentes"
+            colorClass="text-yellow-600 bg-yellow-50"
+          />
+          <StatsCard
+            title="Total de Pacientes"
+            value={recentPatients.length}
+            icon={<Users size={20} />}
+            description="Atendidos recentemente"
+            colorClass="text-purple-600 bg-purple-50"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
+          <RevenueChart
+            clinicRevenue={revenueBySource.clinic}
+            individualRevenue={revenueBySource.individual}
+          />
+          <RecentPatients patients={recentPatients} />
         </div>
       </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4">
-        <StatsCard
-          title="Laudos Emitidos"
-          value={reportsInPeriod}
-          icon={<FileText size={20} />}
-          description="No período selecionado"
-          colorClass="text-blue-600 bg-blue-50"
-        />
-        <StatsCard
-          title="Receita Total"
-          value={`R$ ${totalReceived.toFixed(2)}`}
-          icon={<DollarSign size={20} />}
-          description="No período selecionado"
-          colorClass="text-green-600 bg-green-50"
-        />
-        <StatsCard
-          title="Valor a Receber"
-          value={`R$ ${totalPending.toFixed(2)}`}
-          icon={<BarChart2 size={20} />}
-          description="Pagamentos pendentes"
-          colorClass="text-yellow-600 bg-yellow-50"
-        />
-        <StatsCard
-          title="Total de Pacientes"
-          value={recentPatients.length}
-          icon={<Users size={20} />}
-          description="Atendidos recentemente"
-          colorClass="text-purple-600 bg-purple-50"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
-        <RevenueChart
-          clinicRevenue={revenueBySource.clinic}
-          individualRevenue={revenueBySource.individual}
-        />
-        <RecentPatients patients={recentPatients} />
-      </div>
-    </div>
-  )
+    )
+  }
 }

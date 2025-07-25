@@ -62,6 +62,8 @@ export function SortableFieldItem({ field, modelId }: SortableFieldItemProps) {
         return 'bg-purple-100 text-purple-800'
       case 'image':
         return 'bg-teal-100 text-teal-800'
+      case 'patient-info':
+        return 'bg-yellow-100 text-yellow-800'
       default:
         return 'bg-gray-100 text-gray-800'
     }
@@ -77,10 +79,13 @@ export function SortableFieldItem({ field, modelId }: SortableFieldItemProps) {
         return 'Tabela'
       case 'image':
         return 'Imagem'
+      case 'patient-info':
+        return 'Informações do Paciente'
       default:
         return type
     }
   }
+
 
   const handleFieldUpdate = (key: keyof Field, value: any) =>
     updateField(modelId, field.id, { [key]: value })

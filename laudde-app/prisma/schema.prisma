@@ -105,27 +105,28 @@ model User {
 }
 
 model UserProfile {
-  id                  String   @id @default(uuid())
-  userId              String   @unique
-  name                String
-  cnpj                String?  @unique
-  CRMV                String?  @unique
-  phone               String?
-  instagramHandle     String?
-  instagramURL        String?
-  twitterHandle       String?
-  twitterURL          String?
-  websiteHandle       String?
-  websiteURL          String?
-  address             String?
-  city                String?
-  state               String?
-  profilePictureURL   String?
-  logoPictureURL      String?
-  signaturePictureURL String?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  user                User     @relation(fields: [userId], references: [id])
+  id     String  @id @default(uuid())
+  userId String  @unique
+  name   String
+  cnpj   String? @unique
+  CRMV   String? @unique
+  phone  String?
+  pixKey String?
+
+  avatarPictureUrl    String? @default("https://placehold.co/160x160?text=Avatar")
+  logoPictureURL      String? @default("https://placehold.co/160x160?text=Logo")
+  signaturePictureURL String? @default("https://placehold.co/160x80?text=Assinatura")
+
+  instagramHandle String?
+  instagramURL    String?
+  twitterHandle   String?
+  twitterURL      String?
+  websiteHandle   String?
+  websiteURL      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Patient {
@@ -220,19 +221,39 @@ model Report {
   id        String @id @default(uuid())
   patientId String
   clinicId  String
+  userId    String
 
   type   String?
   status ReportStatus @default(DRAFT)
-
-  images ReportImage[] // Lista de URLs ou paths
+  label  String?      @default("Laudo Veterinário")
   fields Json?
 
-  patient Patient @relation(fields: [patientId], references: [id])
-  clinic  Clinic  @relation(fields: [clinicId], references: [id])
+  accessCode          String // Código simples para acesso
+  documentoPublicHash String    @unique
+  expiresAt           DateTime?
+  maxAttempts         Int       @default(5)
+  attemptCount        Int       @default(0)
+  isBlocked           Boolean   @default(false)
 
-  reportServices ReportService[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 
-  label        String?   @default("Laudo Veterinário")
+  // Relations
+  patient       Patient                @relation(fields: [patientId], references: [id])
+  clinic        Clinic                 @relation(fields: [clinicId], references: [id])
+  user          User                   @relation(fields: [userId], references: [id])
+  images        ReportImage[]
+  services      ReportService[]
+  accesses      AccessLog[]
+  veterinarians Veterinarian[]
+  payment       Payment?
+  transactions  FinancialTransaction[]
+  ReportAccess  ReportAccess[]
+}
+
+model ReportAccess {
+  id           String    @id @default(uuid())
+  reportId     String
   passwordHash String
   publicHash   String    @unique
   expiresAt    DateTime?
@@ -240,17 +261,7 @@ model Report {
   attemptCount Int       @default(0)
   isBlocked    Boolean   @default(false)
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  accesses AccessLog[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-
-  Veterinarian         Veterinarian[]
-  Payment              Payment?
-  FinancialTransaction FinancialTransaction[]
+  report Report @relation(fields: [reportId], references: [id])
 }
 
 model Service {

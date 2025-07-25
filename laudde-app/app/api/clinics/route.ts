@@ -18,7 +18,7 @@ export async function POST(req: Request) {
         phone: body.phone,
         whatsapp: body.whatsapp,
         email: body.email,
-        userId: '22a8ab94-b684-45e5-a484-9417ec1d6176',
+        userId: '22222222-2222-2222-2222-222222222222',
       },
     });
 
